@@ -1,0 +1,22 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: batch-service
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+    url: jdbc:sqlserver://rev-max-batch-server.database.windows.net:1433;databaseName=rev-max-batch-db
+    username: revature@rev-max-batch-server
+    password: BatchService99
+    driver-class: com.microsoft.sqlserver.jdbc.SQLserverDriver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create #or validate
+
