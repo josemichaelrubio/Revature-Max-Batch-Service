@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,31 +22,6 @@ public class Batch {
     private Long trainerId;
     private String location;
 
-<<<<<<< HEAD
-=======
-//    @OneToMany
-//    private List<BatchAssociates> employees;
-
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
-//    @OneToOne
-//    @JoinColumn(name = "instructor_id")
-//    private Employee instructor;
-
-//    @ManyToMany
-//    @JoinTable(name = "employee_batch",
-//            joinColumns = @JoinColumn(name = "batch_id"),
-//            inverseJoinColumns = @JoinColumn(name = "employee_id")
-//    )
-<<<<<<< HEAD
-//
-//
-
-//    @OneToMany
-//    private List<BatchAssociates> associates = new ArrayList<>();
-
-=======
-//    private List<Employee> associates = new ArrayList<>();
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
 
     public Batch() {}
 
@@ -61,21 +34,11 @@ public class Batch {
         this.description = description;
     }
 
-<<<<<<< HEAD
-    public Batch(String name, String description, Long trainerId, String location
-//            , List<BatchAssociates> associates
-    ) {
-=======
     public Batch(String name, String description, Long trainerId, String location) {
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
         this.name = name;
         this.description = description;
         this.trainerId = trainerId;
         this.location = location;
-<<<<<<< HEAD
-//        this.associates = associates;
-=======
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
     }
 
     public Long getId() {
@@ -117,44 +80,6 @@ public class Batch {
     public void setLocation(String location) {
         this.location = location;
     }
-//    public Employee getInstructor() {
-//        return instructor;
-//    }
-//
-//    public void setInstructor(Employee instructor) {
-//        this.instructor = instructor;
-//    }
-//
-//    public List<Employee> getAssociates() {
-//        return associates;
-//    }
-//
-//    public void setAssociates(List<Employee> associates) {
-//        this.associates = associates;
-//    }
-//
-//    public void addAssociate(Employee associate) {
-//        this.associates.add(associate);
-//    }
-//
-//    public void removeAssociate(Employee associate) {
-//        this.associates.remove(associate);
-//    }
-
-
-<<<<<<< HEAD
-//    public List<BatchAssociates> getAssociates() {
-//        return associates;
-//    }
-//
-//    public void setAssociates(List<BatchAssociates> associates) {
-//        this.associates = associates;
-//    }
-//    public List<BatchAssociates> setAssociate(List<BatchAssociates> associates, Long employeeId) {
-//        associates.add(employeeId);
-//        return associates;
-//    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -172,8 +97,6 @@ public class Batch {
     public int hashCode() {
         return Objects.hash(id, name, description, trainerId, location);
     }
-=======
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
 
     @Override
     public String toString() {
