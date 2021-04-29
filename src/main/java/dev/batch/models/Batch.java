@@ -24,6 +24,12 @@ public class Batch {
     private Long trainerId;
     private String location;
 
+<<<<<<< HEAD
+=======
+//    @OneToMany
+//    private List<BatchAssociates> employees;
+
+>>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
 //    @OneToOne
 //    @JoinColumn(name = "instructor_id")
 //    private Employee instructor;
@@ -33,12 +39,16 @@ public class Batch {
 //            joinColumns = @JoinColumn(name = "batch_id"),
 //            inverseJoinColumns = @JoinColumn(name = "employee_id")
 //    )
+<<<<<<< HEAD
 //
 //
 
 //    @OneToMany
 //    private List<BatchAssociates> associates = new ArrayList<>();
 
+=======
+//    private List<Employee> associates = new ArrayList<>();
+>>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
 
     public Batch() {}
 
@@ -51,14 +61,21 @@ public class Batch {
         this.description = description;
     }
 
+<<<<<<< HEAD
     public Batch(String name, String description, Long trainerId, String location
 //            , List<BatchAssociates> associates
     ) {
+=======
+    public Batch(String name, String description, Long trainerId, String location) {
+>>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
         this.name = name;
         this.description = description;
         this.trainerId = trainerId;
         this.location = location;
+<<<<<<< HEAD
 //        this.associates = associates;
+=======
+>>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
     }
 
     public Long getId() {
@@ -125,6 +142,7 @@ public class Batch {
 //    }
 
 
+<<<<<<< HEAD
 //    public List<BatchAssociates> getAssociates() {
 //        return associates;
 //    }
@@ -154,6 +172,8 @@ public class Batch {
     public int hashCode() {
         return Objects.hash(id, name, description, trainerId, location);
     }
+=======
+>>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
 
     @Override
     public String toString() {
