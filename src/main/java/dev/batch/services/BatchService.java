@@ -9,6 +9,7 @@ import dev.batch.models.BatchAssociates;
 import dev.batch.repositories.BatchAssociatesRepository;
 import dev.batch.repositories.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import java.util.*;
 
+@Service
 public class BatchService {
 
 	@Autowired
@@ -140,7 +142,7 @@ public class BatchService {
 
 
 	public List<Employee> getAllAssociates(long batchId) {
-		List<BatchAssociates> associates = batchAssociatesRepository.findAllInBatch(batchId);
+		List<BatchAssociates> associates = batchAssociatesRepository.findAllInBatchById(batchId);
 		List<Long> idsList = new ArrayList<>();
 		associates.forEach(batchAssociates -> idsList.add(batchAssociates.getBatchAssociatesId().getEmployeeId()));
 		// Get employees from the employee service
