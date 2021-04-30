@@ -1,8 +1,13 @@
 package dev.batch.services;
 
 import dev.batch.dto.BatchResponse;
+import dev.batch.dto.Employee;
+import dev.batch.dto.EmployeeQuizScores;
+import dev.batch.dto.EmployeeTopicCompetency;
 import dev.batch.models.Batch;
 import dev.batch.repositories.BatchRepository;
+
+import java.util.*;
 
 public class BatchService {
 
@@ -10,44 +15,111 @@ public class BatchService {
 
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
-        BatchSummary batchSummary = getBasicBatchInfo(id);
+        Batch batchSummary = getBasicBatchInfo(id);
 
         //quizAverages for batch
-        List<QuizAverage> quizAverages = getQuizAveragesInfo(id);
-        for (int i = 0; i < quizAverages.size(); i++) {
-            double average = quizAverages.get(i).getAverageScore();
-            double roundedAverage = DoubleRounder.round(average, 2);
-            quizAverages.get(i).setAverageScore(roundedAverage);
-        }
+        Map<Long, List<String>> quizAverages = getQuizAveragesInfo(id);
 
 
         //topic competencies for batch
-        List<TagAverage> tagAverages = getTopicCompetencyAveragesInfo(id);
-        for (int i = 0; i < tagAverages.size(); i++) {
-            double average = tagAverages.get(i).getAverageCompetency();
-            double roundedAverage = DoubleRounder.round(average, 2);
-            tagAverages.get(i).setAverageCompetency(roundedAverage);
-        }
+        Map<Long, List<String>> tagAverages = getTopicCompetencyAveragesInfo(id);
 
         return new BatchResponse(batchSummary, quizAverages, tagAverages);
     }
 
-    public BatchSummary getBasicBatchInfo(Long id) {
+    public Batch getBasicBatchInfo(Long id) {
         logger.info("Hello");
         return batchRepository.getById(id);
     }
 
+    public Map<Long, List<String>> getQuizAveragesInfo(Long id) {
 
+        List<EmployeeQuizScores> empQuiz; // Fetch from employee service
+        //Need to define comparator still
+        Map<Long, List<String>> averageScoreForQuizzes = new TreeMap<>();
+        Map<Long, List<Float>> scoresForQuiz = new TreeMap<>();
+        for (int i = 0; i < empQuiz.size(); i++) {
+            Long quizId = empQuiz.get(i).getQuizId();
+            // need to make sure to get quiz name from curriculum service
+           // String quizName = empQuiz.get(i).getQuiz().getName();
+            if (!(scoresForQuiz.containsKey(quizId))){
+                scoresForQuiz.put(quizId, new ArrayList<>());
+                scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
+                averageScoreForQuizzes.put(quizId, new ArrayList<>());
+                //averageScoreForQuizzes.get(quizId).add(quizName);
+            }
+            else {
+                scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
+                //averageScoreForQuizzes.get(quizId).add(quizName);
+            }
+        }
 
-    public List<TagAverage> getTopicCompetencyAveragesInfo(Long id) {
-        return employeeTopicRepository.findTagAveragesByBatch(id);
+        for (Long key : scoresForQuiz.keySet()) {
+            int length = scoresForQuiz.get(key).size();
+            int sum = 0;
+            for (int i = 0; i < length; i++) {
+                sum += scoresForQuiz.get(key).get(i);
+            }
+            float average = (float) sum/length;
+            String formattedAverage = String.format("%.2f", average);
+            String formatCount = Integer.toString(length);
+            averageScoreForQuizzes.get(key).add(formattedAverage);
+            averageScoreForQuizzes.get(key).add(formatCount);
+
+        }
+
+        return averageScoreForQuizzes;
     }
 
-    public class SortAscendingComparatorId implements Comparator<String> {
+    public Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id) {
+
+        List<EmployeeTopicCompetency> employeeTopicCompetencies; // Fetch from employee service
+        //Need to define comparator still
+        Map<Long, List<String>> averageTopicCompetencies = new TreeMap<>();
+        Map<Long, List<Float>> competenciesForTechnology = new TreeMap<>();
+        for (int i = 0; i < employeeTopicCompetencies.size(); i++) {
+            Long topicId = employeeTopicCompetencies.get(i).getTopicId();
+            // need to make sure to get topic name from curriculum service
+            // String quizName = empQuiz.get(i).getQuiz().getName();
+            if (!(competenciesForTechnology.containsKey(topicId))){
+                competenciesForTechnology.put(topicId, new ArrayList<>());
+                competenciesForTechnology.get(topicId).add(employeeTopicCompetencies.get(i).getCompetency());
+                averageTopicCompetencies.put(topicId, new ArrayList<>());
+                //averageScoreForQuizzes.get(quizId).add(quizName);
+            }
+            else {
+                competenciesForTechnology.get(topicId).add(employeeTopicCompetencies.get(i).getCompetency());
+                //averageScoreForQuizzes.get(quizId).add(quizName);
+            }
+        }
+
+        for (Long key : competenciesForTechnology.keySet()) {
+            int length = competenciesForTechnology.get(key).size();
+            int sum = 0;
+            for (int i = 0; i < length; i++) {
+                sum += competenciesForTechnology.get(key).get(i);
+            }
+            float average = (float) sum/length;
+            String formattedAverage = String.format("%.2f", average);
+            String formatCount = Integer.toString(length);
+            averageTopicCompetencies.get(key).add(formattedAverage);
+            averageTopicCompetencies.get(key).add(formatCount);
+
+        }
+
+        return averageTopicCompetencies;
+    }
+
+
+
+
+
+
+    public class SortAscendingComparatorId implements Comparator<Integer> {
 
         @Override
-        public int compare(String o1, String o2) {
-            return o1.compareTo(o2);
+        public int compare(int o1, int o2) {
+            return o1.compare(o2);
         }
 
     }
@@ -56,6 +128,7 @@ public class BatchService {
         Batch batch = batchRepository.getBatchById(batchId);
         if(batch!=null){
             return batch.getAssociates();
+            //
         }
         return new ArrayList<>();
     }

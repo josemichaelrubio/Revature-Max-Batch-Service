@@ -3,42 +3,46 @@ package dev.batch.dto;
 
 import dev.batch.models.Batch;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 public class BatchResponse {
 
-   /* private Batch batch;
-    private List<QuizAverage> quizAverage = new ArrayList<>();
-    private List<TagAverage> competencyAverage = new ArrayList<>();
+    private Batch batch;
+    private Map<Long, List<String>> quizAverage;
+    private Map<Long, List<String>> competencyAverage;
 
     public BatchResponse() {}
 
-    public BatchResponse(BatchSummary batch, List<QuizAverage> quizAverage, List<TagAverage> competencyAverage) {
+    public BatchResponse(Batch batch, Map<Long, List<String>> quizAverage, Map<Long, List<String>> competencyAverage) {
         this.batch = batch;
         this.quizAverage = quizAverage;
         this.competencyAverage = competencyAverage;
 
     }
 
-    public BatchSummary getBatch() {
+    public Batch getBatch() {
         return batch;
     }
 
-    public void setBatch(BatchSummary batch) {
+    public void setBatch(Batch batch) {
         this.batch = batch;
     }
 
-    public List<QuizAverage> getQuizAverage() {
+    public Map<Long, List<String>> getQuizAverage() {
         return quizAverage;
     }
 
-    public void setQuizAverage(List<QuizAverage> quizAverage) {
+    public void setQuizAverage(Map<Long, List<String>> quizAverage) {
         this.quizAverage = quizAverage;
     }
 
-    public List<TagAverage> getCompetencyAverage() {
+    public Map<Long, List<String>> getCompetencyAverage() {
         return competencyAverage;
     }
 
-    public void setCompetencyAverage(List<TagAverage> competencyAverage) {
+    public void setCompetencyAverage(Map<Long, List<String>> competencyAverage) {
         this.competencyAverage = competencyAverage;
     }
 

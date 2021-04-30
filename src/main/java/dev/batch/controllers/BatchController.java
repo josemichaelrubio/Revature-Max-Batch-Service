@@ -1,8 +1,11 @@
 package dev.batch.controllers;
+import dev.batch.dto.Employee;
 import dev.batch.services.BatchService;
 import dev.batch.dto.BatchResponse;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -42,7 +45,7 @@ public class BatchController {
     @PostMapping("/{batch-id}/associates")
     public ResponseEntity<List<Employee>> postAssociates(@PathVariable("batch-id") long batchId,
                                                          @RequestHeader("Authorization")String authorization,
-                                                         @RequestBody List<Employee> employees)
+                                                         @RequestBody List<Employee> employee)
     {
         logger.info("trainer adding employees: "+employees+" to batch: "+batchId);
         return ResponseEntity.ok().body(batchService.addAssociate(batchId, employees));
