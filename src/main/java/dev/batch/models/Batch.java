@@ -21,6 +21,7 @@ public class Batch {
     private String description;
     private Long trainerId;
     private String location;
+    private Long curriculumId;
 
 
     public Batch() {}
@@ -34,11 +35,12 @@ public class Batch {
         this.description = description;
     }
 
-    public Batch(String name, String description, Long trainerId, String location) {
+    public Batch(String name, String description, Long trainerId, String location, Long curriculumId) {
         this.name = name;
         this.description = description;
         this.trainerId = trainerId;
         this.location = location;
+        this.curriculumId = curriculumId;
     }
 
     public Long getId() {
@@ -81,21 +83,25 @@ public class Batch {
         this.location = location;
     }
 
+    public Long getCurriculumId() {
+        return curriculumId;
+    }
+
+    public void setCurriculumId(Long curriculumId) {
+        this.curriculumId = curriculumId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Batch batch = (Batch) o;
-        return Objects.equals(id, batch.id) &&
-                Objects.equals(name, batch.name) &&
-                Objects.equals(description, batch.description) &&
-                Objects.equals(trainerId, batch.trainerId) &&
-                Objects.equals(location, batch.location);
+        return Objects.equals(id, batch.id) && Objects.equals(name, batch.name) && Objects.equals(description, batch.description) && Objects.equals(trainerId, batch.trainerId) && Objects.equals(location, batch.location) && Objects.equals(curriculumId, batch.curriculumId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, trainerId, location);
+        return Objects.hash(id, name, description, trainerId, location, curriculumId);
     }
 
     @Override
@@ -106,6 +112,7 @@ public class Batch {
                 ", description='" + description + '\'' +
                 ", trainerId=" + trainerId +
                 ", location='" + location + '\'' +
+                ", curriculumId=" + curriculumId +
                 '}';
     }
 }
