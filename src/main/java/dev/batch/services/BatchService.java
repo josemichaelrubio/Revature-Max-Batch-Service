@@ -6,7 +6,11 @@ import dev.batch.repositories.BatchRepository;
 
 public class BatchService {
 
+    @Autowired
     private BatchRepository batchRepository;
+
+    @Autowired
+    private BatchAssociatesRepository batchAssociatesRepository;
 
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
@@ -88,15 +92,6 @@ public class BatchService {
 
     @Transactional
     public void deleteAssociate(long batchId, long empId){
-        Batch batch = batchRepository.getBatchById(batchId);
-        Employee emp = employeeRepository.getOne(empId);
-        if(batch!=null){
-
-            batch.removeAssociate(emp);
-            batchRepository.save(batch);
-        }
+        batchAssociatesRepository.deleteByEmployeeId(empId);
     }
-
-
-
 }
