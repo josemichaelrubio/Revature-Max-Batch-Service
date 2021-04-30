@@ -10,9 +10,10 @@ public class BatchService {
 
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
-        BatchSummary batchSummary = getBasicBatchInfo(id);
+        Batch batch = getBasicBatchInfo(id);
 
         //quizAverages for batch
+        //go to employee service and call for trainer
         List<QuizAverage> quizAverages = getQuizAveragesInfo(id);
         for (int i = 0; i < quizAverages.size(); i++) {
             double average = quizAverages.get(i).getAverageScore();
@@ -29,12 +30,11 @@ public class BatchService {
             tagAverages.get(i).setAverageCompetency(roundedAverage);
         }
 
-        return new BatchResponse(batchSummary, quizAverages, tagAverages);
+        return new BatchResponse(batch, quizAverages, tagAverages);
     }
 
-    public BatchSummary getBasicBatchInfo(Long id) {
-        logger.info("Hello");
-        return batchRepository.getById(id);
+    public Batch getBasicBatchInfo(Long id) {
+        return batchRepository.getBatchById(id);
     }
 
 
@@ -43,7 +43,7 @@ public class BatchService {
         return employeeTopicRepository.findTagAveragesByBatch(id);
     }
 
-    public class SortAscendingComparatorId implements Comparator<String> {
+    public class  SortAscendingComparatorId implements Comparator<String> {
 
         @Override
         public int compare(String o1, String o2) {
