@@ -45,12 +45,10 @@ public class BatchController {
     @PostMapping("/{batch-id}/associates")
     public ResponseEntity<List<Employee>> postAssociates(@PathVariable("batch-id") long batchId,
                                                          @RequestHeader("Authorization")String authorization,
-                                                         @RequestBody List<Employee> employee)
+                                                         @RequestBody List<Employee> employeeEmails)
     {
-        logger.info("trainer adding employees: "+employees+" to batch: "+batchId);
-        return ResponseEntity.ok().body(batchService.addAssociate(batchId, employees));
-
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.FORBIDDEN);
+        logger.info("trainer adding employees: "+employeeEmails+" to batch: "+batchId);
+        return ResponseEntity.ok().body(batchService.addAssociate(batchId, employeeEmails));
     }
 
     @DeleteMapping("/{batch-id}/associates/{employee-id}")

@@ -5,36 +5,50 @@ import dev.batch.dto.Employee;
 import dev.batch.dto.EmployeeQuizScores;
 import dev.batch.dto.EmployeeTopicCompetency;
 import dev.batch.models.Batch;
+import dev.batch.models.BatchAssociates;
+import dev.batch.repositories.BatchAssociatesRepository;
 import dev.batch.repositories.BatchRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.*;
 
 public class BatchService {
 
-    private BatchRepository batchRepository;
+	@Autowired
+	private BatchRepository batchRepository;
+	@Autowired
+	private BatchAssociatesRepository batchAssociatesRepository;
+	@Autowired
+	private EmployeeService employeeService;
 
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
-        Batch batchSummary = getBasicBatchInfo(id);
 
         //quizAverages for batch
         Map<Long, List<String>> quizAverages = getQuizAveragesInfo(id);
+
+        Batch batch = getBasicBatchInfo(id);
+        //go to employee service and call for trainer
 
 
         //topic competencies for batch
         Map<Long, List<String>> tagAverages = getTopicCompetencyAveragesInfo(id);
 
-        return new BatchResponse(batchSummary, quizAverages, tagAverages);
+        return new BatchResponse(batch, quizAverages, tagAverages);
     }
 
     public Batch getBasicBatchInfo(Long id) {
-        logger.info("Hello");
-        return batchRepository.getById(id);
+        return batchRepository.findById(id).orElse(null);
+
     }
 
     public Map<Long, List<String>> getQuizAveragesInfo(Long id) {
 
-        List<EmployeeQuizScores> empQuiz; // Fetch from employee service
+        List<EmployeeQuizScores> empQuiz = new ArrayList<>(); // Fetch from employee service
         //Need to define comparator still
         Map<Long, List<String>> averageScoreForQuizzes = new TreeMap<>();
         Map<Long, List<Float>> scoresForQuiz = new TreeMap<>();
@@ -73,7 +87,7 @@ public class BatchService {
 
     public Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id) {
 
-        List<EmployeeTopicCompetency> employeeTopicCompetencies; // Fetch from employee service
+        List<EmployeeTopicCompetency> employeeTopicCompetencies = new ArrayList<>(); // Fetch from employee service
         //Need to define comparator still
         Map<Long, List<String>> averageTopicCompetencies = new TreeMap<>();
         Map<Long, List<Float>> competenciesForTechnology = new TreeMap<>();
@@ -115,61 +129,48 @@ public class BatchService {
 
 
 
-    public class SortAscendingComparatorId implements Comparator<Integer> {
+    /*public class SortAscendingComparatorId implements Comparator<Long> {
 
         @Override
         public int compare(int o1, int o2) {
             return o1.compare(o2);
         }
 
-    }
-
-    public List<Employee> getAllAssociates(long batchId){
-        Batch batch = batchRepository.getBatchById(batchId);
-        if(batch!=null){
-            return batch.getAssociates();
-            //
-        }
-        return new ArrayList<>();
-    }
-
-    public List<Employee> addAssociate(long batchId, List<Employee> employees){
-        Batch batch = batchRepository.getBatchById(batchId);
-        List<Employee> newAssociates = new ArrayList<>();
-        if(batch!=null){
-
-            for(Employee e : employees){
-                if(e.getName()!=null){
-                    newAssociates.add(e);
-                }else{
-                    try{
-                        e = employeeRepository.findByEmail(e.getEmail());// reassign the employee object with the one found by email stored within
-                        newAssociates.add(e);
-                    } catch (EntityNotFoundException exception){
-                        employees.remove(e);
-                    }
-                }
+    }*/
 
 
-            }
-            batch.setAssociates(newAssociates);
-            batchRepository.save(batch);
-            return employees;
-        }
-        return new ArrayList<>();
+	public List<Employee> getAllAssociates(long batchId) {
+		List<BatchAssociates> associates = batchAssociatesRepository.findAllInBatch(batchId);
+		List<Long> idsList = new ArrayList<>();
+		associates.forEach(batchAssociates -> idsList.add(batchAssociates.getBatchAssociatesId().getEmployeeId()));
+		// Get employees from the employee service
+		return employeeService.getEmployeesByListOfIds(idsList);
+	}
+
+	@Transactional
+    public List<Employee> addAssociate(long batchId, List<Employee> employeeEmails){
+		Batch batch = batchRepository.findById(batchId).orElse(null);
+		if (batch==null) {
+			// return or throw exception
+			return null;
+		}
+		List<String> emailList = new ArrayList<>();
+		employeeEmails.forEach(employee -> emailList.add(employee.getEmail()));
+		// get the employee objects from Employee Service with the emails
+		// for now, only get returns (?) for people currently registered so this list may be shorter
+		List<Employee> fullEmployees = new ArrayList<>();
+		//fullEmployees = employeeService.getEmployeesByListOfEmails(emailList);
+
+		List<BatchAssociates> associatesToAdd = new ArrayList<>();
+		fullEmployees.forEach(employee -> associatesToAdd.add(new BatchAssociates(new BatchAssociates.BatchAssociatesId(employee.getId(), batch))));
+
+		associatesToAdd.forEach(batchAssociate -> batchAssociatesRepository.save(batchAssociate));
+
+		return fullEmployees;
     }
 
     @Transactional
     public void deleteAssociate(long batchId, long empId){
-        Batch batch = batchRepository.getBatchById(batchId);
-        Employee emp = employeeRepository.getOne(empId);
-        if(batch!=null){
-
-            batch.removeAssociate(emp);
-            batchRepository.save(batch);
-        }
+        batchAssociatesRepository.deleteByEmployeeId(empId);
     }
-
-
-
 }
