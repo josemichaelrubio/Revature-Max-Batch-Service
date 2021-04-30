@@ -4,15 +4,9 @@ spring:
   application:
     name: batch-service
   cloud:
-<<<<<<< HEAD
     consul:
       host: localhost
       port: 8500
-=======
-#    consul:
-#      host: localhost
-#      port: 8500
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
   devtools:
     restart:
       enabled: true
