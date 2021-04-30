@@ -11,16 +11,12 @@ spring:
     restart:
       enabled: true
   datasource:
-<<<<<<< HEAD
     url: jdbc:sqlserver://rev-max-batch-server.database.windows.net:1433;databaseName=rev-max-batch-db
-=======
-    url: jdbc:sqlserver://rev-max-batch-server.database.windows.net:1433;databaseName=rev-max-db2
->>>>>>> 58ea2b10aac4966fd08c5dbcda67b998583d92ce
     username: revature@rev-max-batch-server
     password: BatchService99
     driver-class: com.microsoft.sqlserver.jdbc.SQLserverDriver
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create #or validate
+      ddl-auto: update #or validate
 
