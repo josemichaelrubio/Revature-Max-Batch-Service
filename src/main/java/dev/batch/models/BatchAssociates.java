@@ -22,6 +22,10 @@ public class BatchAssociates {
     public BatchAssociates() {
     }
 
+    public BatchAssociates(BatchAssociatesId batchAssociatesId) {
+        this.batchAssociatesId = batchAssociatesId;
+    }
+
     public BatchAssociatesId getBatchAssociatesId() {
         return batchAssociatesId;
     }
@@ -51,10 +55,18 @@ public class BatchAssociates {
     }
 
     @Embeddable
-    public class BatchAssociatesId implements Serializable {
+    public static class BatchAssociatesId implements Serializable {
         private Long employeeId;
         @ManyToOne
         private Batch batch;
+
+        public BatchAssociatesId() {
+        }
+
+        public BatchAssociatesId(Long employeeId, Batch batch) {
+            this.employeeId = employeeId;
+            this.batch = batch;
+        }
 
         public Long getEmployeeId() {
             return employeeId;
