@@ -13,8 +13,8 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
 
 //    BatchSummary getById(long id);
 
-//    @Query("SELECT b FROM Batch b LEFT JOIN FETCH b.associates LEFT JOIN FETCH b.instructor WHERE b.id = :batchId")
-//    Batch getBatchById(@Param("batchId") long id);
+       @Query("SELECT b FROM Batch b LEFT JOIN FETCH b.associates LEFT JOIN FETCH b.instructor WHERE b.id = :batchId")
+       Batch getBatchById(@Param("batchId") long id);
 //
 //    @Query("SELECT b FROM Batch b WHERE :employee MEMBER OF b.associates")
 //    Batch getBatchForAssociate(@Param("employee") Employee employee);
