@@ -73,6 +73,7 @@ public class BatchService {
 		return employeeService.getEmployeesByListOfIds(idsList);
 	}
 
+	@Transactional
     public List<Employee> addAssociate(long batchId, List<Employee> employeeEmails){
 		Batch batch = batchRepository.findById(batchId).orElse(null);
 		if (batch==null) {
@@ -96,12 +97,6 @@ public class BatchService {
 
     @Transactional
     public void deleteAssociate(long batchId, long empId){
-        Batch batch = batchRepository.getBatchById(batchId);
-//        Employee emp = employeeRepository.getOne(empId);
-        if(batch!=null){
-            batchRepository.save(batch);
-        }
+        batchAssociatesRepository.deleteByEmployeeId(empId);
     }
-
-
 }
