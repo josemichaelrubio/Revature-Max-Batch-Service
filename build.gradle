@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre8'
+    implementation 'com.h2database:h2'
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 

@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 8083
 spring:
   application:
     name: batch-service
@@ -11,12 +11,40 @@ spring:
     restart:
       enabled: true
   datasource:
-    url: jdbc:sqlserver://rev-max-batch-db-server.database.windows.net:1433;databaseName=rev-max-batch-db
-    username: revature@rev-max-batch-db-server
-    password: BatchService99
+    url: jdbc:h2:mem:testdb;MODE=MSSQLServer
+    username: sa
+    password:
     driver-class: com.microsoft.sqlserver.jdbc.SQLserverDriver
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update #or validate
+      ddl-auto: validate #or validate
 
+---
+server:
+  port: 8083
+spring:
+  application:
+    name: batch-service
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+  devtools:
+    restart:
+      enabled: true
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password: password
+    driver-class: org.h2.Driver
+  h2:
+    console.enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update #or validate

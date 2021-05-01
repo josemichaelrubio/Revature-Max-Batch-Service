@@ -8,15 +8,12 @@ public class Employee {
 	private String email;
 	// string or mirror the enum
 	private String role;
-	// Can easily be changed depending on how the JSON is returned to us.
-	// It'll probably be easier to match our objects/dtos to that then to wrestle jackson to map it differently
-	private EmployeeInformation employeeInformation;
+	private String name;
+	private String phoneNumber;
+	private String address;
+	// probably don't need it, but I'll mirror the DTO
+	private String pictureUrl;
 
-	private Set<EmployeeQuizScores> quizScores;
-	private Set<EmployeeTopicCompetency> topicCompetencies;
-
-	// Since we don't use the other tables / aspects we don't need to map them.
-	// Should they become important later, we can update dtos to match
 
 	public Employee() {
 	}
@@ -25,6 +22,38 @@ public class Employee {
 		this.id = id;
 		this.email = email;
 		this.role = role;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
 	}
 
 	public Long getId() {
@@ -51,41 +80,17 @@ public class Employee {
 		this.role = role;
 	}
 
-	public EmployeeInformation getEmployeeInformation() {
-		return employeeInformation;
-	}
-
-	public void setEmployeeInformation(EmployeeInformation employeeInformation) {
-		this.employeeInformation = employeeInformation;
-	}
-
-	public Set<EmployeeQuizScores> getQuizScores() {
-		return quizScores;
-	}
-
-	public void setQuizScores(Set<EmployeeQuizScores> quizScores) {
-		this.quizScores = quizScores;
-	}
-
-	public Set<EmployeeTopicCompetency> getTopicCompetencies() {
-		return topicCompetencies;
-	}
-
-	public void setTopicCompetencies(Set<EmployeeTopicCompetency> topicCompetencies) {
-		this.topicCompetencies = topicCompetencies;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Employee employee = (Employee) o;
-		return Objects.equals(id, employee.id) && Objects.equals(email, employee.email) && Objects.equals(role, employee.role) && Objects.equals(employeeInformation, employee.employeeInformation) && Objects.equals(quizScores, employee.quizScores) && Objects.equals(topicCompetencies, employee.topicCompetencies);
+		return Objects.equals(id, employee.id) && Objects.equals(email, employee.email) && Objects.equals(role, employee.role) && Objects.equals(name, employee.name) && Objects.equals(phoneNumber, employee.phoneNumber) && Objects.equals(address, employee.address) && Objects.equals(pictureUrl, employee.pictureUrl);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, email, role, employeeInformation, quizScores, topicCompetencies);
+		return Objects.hash(id, email, role, name, phoneNumber, address, pictureUrl);
 	}
 
 	@Override
@@ -94,9 +99,10 @@ public class Employee {
 				"id=" + id +
 				", email='" + email + '\'' +
 				", role='" + role + '\'' +
-				", employeeInformation=" + employeeInformation +
-				", quizScores=" + quizScores +
-				", topicCompetencies=" + topicCompetencies +
+				", name='" + name + '\'' +
+				", phoneNumber='" + phoneNumber + '\'' +
+				", address='" + address + '\'' +
+				", pictureUrl='" + pictureUrl + '\'' +
 				'}';
 	}
 }

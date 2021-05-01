@@ -1,9 +1,6 @@
 package dev.batch.services;
 
-import dev.batch.dto.BatchResponse;
-import dev.batch.dto.Employee;
-import dev.batch.dto.EmployeeQuizScores;
-import dev.batch.dto.EmployeeTopicCompetency;
+import dev.batch.dto.*;
 import dev.batch.models.Batch;
 import dev.batch.models.BatchAssociates;
 import dev.batch.repositories.BatchAssociatesRepository;
@@ -26,18 +23,22 @@ public class BatchService {
 	private BatchAssociatesRepository batchAssociatesRepository;
 	@Autowired
 	private EmployeeService employeeService;
+	@Autowired
+	private CurriculumService curriculumService;
 
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
 
         //quizAverages for batch
         Map<Long, List<String>> quizAverages = getQuizAveragesInfo(id);
+        //TODO: quiz averages and competencies each make a call. Can be condensed into 1 call
+		//Can get quiz and topic names in a single / two calls to curriculum here
 
         Batch batch = getBasicBatchInfo(id);
         //go to employee service and call for trainer
 
 
-        //topic competencies for batch
+		//topic competencies for batch
         Map<Long, List<String>> tagAverages = getTopicCompetencyAveragesInfo(id);
 
         return new BatchResponse(batch, quizAverages, tagAverages);
@@ -50,23 +51,26 @@ public class BatchService {
 
     public Map<Long, List<String>> getQuizAveragesInfo(Long id) {
 
-        List<EmployeeQuizScores> empQuiz = new ArrayList<>(); // Fetch from employee service
+    	List<EmployeeDTO> employeeDTOS = getAllAssociates(id, true, false);
+        List<EmployeeQuizScore> empQuiz = new LinkedList<>(); // Fetch from employee service
+		employeeDTOS.forEach(employeeDTO -> empQuiz.addAll(employeeDTO.getQuizScores()));
+
         //Need to define comparator still
         Map<Long, List<String>> averageScoreForQuizzes = new TreeMap<>();
         Map<Long, List<Float>> scoresForQuiz = new TreeMap<>();
         for (int i = 0; i < empQuiz.size(); i++) {
-            Long quizId = empQuiz.get(i).getQuizId();
+            Long quizId = empQuiz.get(i).getId().getQuizId();
             // need to make sure to get quiz name from curriculum service
-           // String quizName = empQuiz.get(i).getQuiz().getName();
+			// TODO: makes a request for each quiz. Can get all names at once
+            String quizName = curriculumService.getQuizById(empQuiz.get(i).getId().getQuizId()).getName();
             if (!(scoresForQuiz.containsKey(quizId))){
                 scoresForQuiz.put(quizId, new ArrayList<>());
                 scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
                 averageScoreForQuizzes.put(quizId, new ArrayList<>());
-                //averageScoreForQuizzes.get(quizId).add(quizName);
+                averageScoreForQuizzes.get(quizId).add(quizName);
             }
             else {
                 scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
-                //averageScoreForQuizzes.get(quizId).add(quizName);
             }
         }
 
@@ -89,12 +93,15 @@ public class BatchService {
 
     public Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id) {
 
+		List<EmployeeDTO> employeeDTOS = getAllAssociates(id, false, true);
         List<EmployeeTopicCompetency> employeeTopicCompetencies = new ArrayList<>(); // Fetch from employee service
+		employeeDTOS.forEach(employeeDTO -> employeeTopicCompetencies.addAll(employeeDTO.getTopicCompetencies()));
+
         //Need to define comparator still
         Map<Long, List<String>> averageTopicCompetencies = new TreeMap<>();
         Map<Long, List<Float>> competenciesForTechnology = new TreeMap<>();
         for (int i = 0; i < employeeTopicCompetencies.size(); i++) {
-            Long topicId = employeeTopicCompetencies.get(i).getTopicId();
+            Long topicId = employeeTopicCompetencies.get(i).getId().getTopicId();
             // need to make sure to get topic name from curriculum service
             // String quizName = empQuiz.get(i).getQuiz().getName();
             if (!(competenciesForTechnology.containsKey(topicId))){
@@ -105,7 +112,6 @@ public class BatchService {
             }
             else {
                 competenciesForTechnology.get(topicId).add(employeeTopicCompetencies.get(i).getCompetency());
-                //averageScoreForQuizzes.get(quizId).add(quizName);
             }
         }
 
@@ -127,12 +133,13 @@ public class BatchService {
     }
 
 
-	public List<Employee> getAllAssociates(long batchId) {
+
+	public List<EmployeeDTO> getAllAssociates(long batchId, boolean includeQuizScores, boolean includeTopicCompetencies) {
 		List<BatchAssociates> associates = batchAssociatesRepository.findAllInBatchById(batchId);
 		List<Long> idsList = new ArrayList<>();
 		associates.forEach(batchAssociates -> idsList.add(batchAssociates.getBatchAssociatesId().getEmployeeId()));
 		// Get employees from the employee service
-		return employeeService.getEmployeesByListOfIds(idsList);
+		return employeeService.getEmployeesByListOfIds(idsList, includeQuizScores, includeTopicCompetencies);
 	}
 
 	@Transactional
@@ -144,7 +151,7 @@ public class BatchService {
 		}
 		List<String> emailList = new ArrayList<>();
 		employeeEmails.forEach(employee -> emailList.add(employee.getEmail()));
-		// get the employee objects from Employee Service with the emails
+		//TODO: get the employee objects from Employee Service with the emails
 		// for now, only get returns (?) for people currently registered so this list may be shorter
 		List<Employee> fullEmployees = new ArrayList<>();
 		//fullEmployees = employeeService.getEmployeesByListOfEmails(emailList);
