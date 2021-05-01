@@ -127,20 +127,6 @@ public class BatchService {
     }
 
 
-
-
-
-
-    /*public class SortAscendingComparatorId implements Comparator<Long> {
-
-        @Override
-        public int compare(int o1, int o2) {
-            return o1.compare(o2);
-        }
-
-    }*/
-
-
 	public List<Employee> getAllAssociates(long batchId) {
 		List<BatchAssociates> associates = batchAssociatesRepository.findAllInBatchById(batchId);
 		List<Long> idsList = new ArrayList<>();
