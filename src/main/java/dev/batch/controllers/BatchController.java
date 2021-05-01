@@ -1,5 +1,6 @@
 package dev.batch.controllers;
 import dev.batch.dto.Employee;
+import dev.batch.dto.EmployeeDTO;
 import dev.batch.services.BatchService;
 import dev.batch.dto.BatchResponse;
 import org.apache.logging.log4j.LogManager;
@@ -37,9 +38,9 @@ public class BatchController {
 
 
     @GetMapping("/{batch-id}/associates")
-    public ResponseEntity<List<Employee>> getAssociates(@PathVariable("batch-id") long batchId) {
+    public ResponseEntity<List<EmployeeDTO>> getAssociates(@PathVariable("batch-id") long batchId) {
         logger.info("Accessing all associates listed under batch id: "+batchId);
-        return ResponseEntity.ok().body(batchService.getAllAssociates(batchId));
+        return ResponseEntity.ok().body(batchService.getAllAssociates(batchId, false, false));
     }
 
     @PostMapping("/{batch-id}/associates")

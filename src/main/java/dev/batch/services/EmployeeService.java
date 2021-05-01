@@ -1,7 +1,9 @@
 package dev.batch.services;
 
 import dev.batch.dto.Employee;
+import dev.batch.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,7 +37,7 @@ public class EmployeeService {
 //		return restTemplate.getForObject(requestUrl, Employee.class);
 	}
 
-	public List<Employee> getEmployeesByListOfIds(List<Long> employeeIds){
+	public List<EmployeeDTO> getEmployeesByListOfIds(List<Long> employeeIds, boolean includeQuizScores, boolean includeTopicCompetencies){
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
 		StringBuilder stringOfIds = new StringBuilder();
 		employeeIds.forEach(id-> stringOfIds.append(",").append(id));
@@ -44,7 +46,17 @@ public class EmployeeService {
 		// Don't remember the name of the query param
 		uriComponentsBuilder.queryParam("id", stringOfIds);
 		String uri = uriComponentsBuilder.toUriString();
-		ResponseEntity<Employee[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
+		uri += "&field=";
+		if (includeQuizScores)
+			uri += "quiz-scores,";
+		if (includeTopicCompetencies)
+			uri += "topic-competencies";
+
+
+		System.out.println(uri);
+		ResponseEntity<EmployeeDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class);
+		System.out.println(responseEntity.getBody().length);
+		System.out.println(responseEntity.getBody());
 		if (responseEntity.getBody() != null){
 			return Arrays.asList(responseEntity.getBody());
 		}
