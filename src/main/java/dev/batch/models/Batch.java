@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name="batch")
+//@Table(name="batch")
 @Component
 @JsonIgnoreProperties("hibernateLazyInitializer")
 @Scope("prototype")

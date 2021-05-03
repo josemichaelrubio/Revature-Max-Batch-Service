@@ -29,17 +29,33 @@ public class BatchService {
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
 
-        //quizAverages for batch
-        Map<Long, List<String>> quizAverages = getQuizAveragesInfo(id);
-        //TODO: quiz averages and competencies each make a call. Can be condensed into 1 call
-		//Can get quiz and topic names in a single / two calls to curriculum here
+
+        List<EmployeeDTO> employeeDTOS = getAllAssociates(id, true, true);
+        List<EmployeeQuizScore> empQuiz = new LinkedList<>();// Fetch from employee service
+        List<EmployeeTopicCompetency> employeeTopicCompetencies = new ArrayList<>(); // Fetch from employee service
+
+        for (int i = 0; i < employeeDTOS.size(); i++) {
+            if (employeeDTOS.get(i).getQuizScores() != null) {
+                for (int j = 0; j < employeeDTOS.get(i).getQuizScores().size(); j++) {
+                    empQuiz.add(employeeDTOS.get(i).getQuizScores().get(j));
+                }
+            }
+
+            if (employeeDTOS.get(i).getTopicCompetencies() != null) {
+                for (int j = 0; j < employeeDTOS.get(i).getTopicCompetencies().size(); j++) {
+                    employeeTopicCompetencies.add(employeeDTOS.get(i).getTopicCompetencies().get(j));
+                }
+            }
+        }
 
         Batch batch = getBasicBatchInfo(id);
-        //go to employee service and call for trainer
+
+        //quizAverages for batch
+        Map<Long, List<String>> quizAverages = getQuizAveragesInfo(empQuiz);
 
 
 		//topic competencies for batch
-        Map<Long, List<String>> tagAverages = getTopicCompetencyAveragesInfo(id);
+        Map<Long, List<String>> tagAverages = getTopicCompetencyAveragesInfo(id, employeeTopicCompetencies);
 
         return new BatchResponse(batch, quizAverages, tagAverages);
     }
@@ -49,25 +65,40 @@ public class BatchService {
 
     }
 
-    public Map<Long, List<String>> getQuizAveragesInfo(Long id) {
+    public List<QuizDTO> grabQuizNames(List<EmployeeQuizScore> empQuiz) {
+        // Grab quiz ids from EmployeeQuiz objects returned from the Employee Service
+        List<Long> quizIds = new ArrayList<>();
+        for (int i = 0; i < empQuiz.size(); i++) {
+            if (!(quizIds.contains(empQuiz.get(i).getId().getQuizId()))) {
+                quizIds.add(empQuiz.get(i).getId().getQuizId());
+            }
 
-    	List<EmployeeDTO> employeeDTOS = getAllAssociates(id, true, false);
-        List<EmployeeQuizScore> empQuiz = new LinkedList<>(); // Fetch from employee service
-		employeeDTOS.forEach(employeeDTO -> empQuiz.addAll(employeeDTO.getQuizScores()));
+        }
+        // Send a list of these quiz ids to the Curriculum Service to get associated quiz name
+       return curriculumService.getQuizzesByListOfIds(quizIds);
+    }
 
-        //Need to define comparator still
+    public Map<Long, List<String>> getQuizAveragesInfo(List<EmployeeQuizScore> empQuiz) {
+
+        // Retrive quiz names from curriculum service
+        List<QuizDTO> quizDTOS = grabQuizNames(empQuiz);
+
+        // Calculate quiz averages and format quiz average output
         Map<Long, List<String>> averageScoreForQuizzes = new TreeMap<>();
         Map<Long, List<Float>> scoresForQuiz = new TreeMap<>();
         for (int i = 0; i < empQuiz.size(); i++) {
             Long quizId = empQuiz.get(i).getId().getQuizId();
-            // need to make sure to get quiz name from curriculum service
-			// TODO: makes a request for each quiz. Can get all names at once
-            String quizName = curriculumService.getQuizById(empQuiz.get(i).getId().getQuizId()).getName();
             if (!(scoresForQuiz.containsKey(quizId))){
                 scoresForQuiz.put(quizId, new ArrayList<>());
                 scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
                 averageScoreForQuizzes.put(quizId, new ArrayList<>());
-                averageScoreForQuizzes.get(quizId).add(quizName);
+                for (int j = 0; j < quizDTOS.size(); j++) {
+                    if (quizId.equals(quizDTOS.get(j).getQuizId())) {
+                        String quizName = quizDTOS.get(j).getName();
+                        averageScoreForQuizzes.get(quizId).add(quizName);
+                        break;
+                    }
+                }
             }
             else {
                 scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
@@ -91,24 +122,40 @@ public class BatchService {
         return averageScoreForQuizzes;
     }
 
-    public Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id) {
+    public List<TopicDTO> grabTopicsAndTechNames(List<EmployeeTopicCompetency> employeeTopicCompetencies) {
 
-		List<EmployeeDTO> employeeDTOS = getAllAssociates(id, false, true);
-        List<EmployeeTopicCompetency> employeeTopicCompetencies = new ArrayList<>(); // Fetch from employee service
-		employeeDTOS.forEach(employeeDTO -> employeeTopicCompetencies.addAll(employeeDTO.getTopicCompetencies()));
+        List<Long> topicIds = new ArrayList<>();
+        for (int i = 0; i < employeeTopicCompetencies.size(); i++) {
+            if (!(topicIds.contains(employeeTopicCompetencies.get(i).getId().getTopicId()))) {
+                topicIds.add(employeeTopicCompetencies.get(i).getId().getTopicId());
+            }
+        }
 
-        //Need to define comparator still
+        return curriculumService.getTopicsByListOfIds(topicIds);
+    }
+
+
+    public Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id, List<EmployeeTopicCompetency> employeeTopicCompetencies) {
+
+       List<TopicDTO> topicDTOS = grabTopicsAndTechNames(employeeTopicCompetencies);
+       System.out.println(topicDTOS);
+
         Map<Long, List<String>> averageTopicCompetencies = new TreeMap<>();
         Map<Long, List<Float>> competenciesForTechnology = new TreeMap<>();
         for (int i = 0; i < employeeTopicCompetencies.size(); i++) {
             Long topicId = employeeTopicCompetencies.get(i).getId().getTopicId();
             // need to make sure to get topic name from curriculum service
-            // String quizName = empQuiz.get(i).getQuiz().getName();
             if (!(competenciesForTechnology.containsKey(topicId))){
                 competenciesForTechnology.put(topicId, new ArrayList<>());
                 competenciesForTechnology.get(topicId).add(employeeTopicCompetencies.get(i).getCompetency());
                 averageTopicCompetencies.put(topicId, new ArrayList<>());
-                //averageScoreForQuizzes.get(quizId).add(quizName);
+                for (int j = 0; j < topicDTOS.size(); j++) {
+                    if (topicId.equals(topicDTOS.get(j).getTopicId())) {
+                        String techName = topicDTOS.get(j).getTechName();
+                        averageTopicCompetencies.get(topicId).add(techName);
+                        break;
+                    }
+                }
             }
             else {
                 competenciesForTechnology.get(topicId).add(employeeTopicCompetencies.get(i).getCompetency());
