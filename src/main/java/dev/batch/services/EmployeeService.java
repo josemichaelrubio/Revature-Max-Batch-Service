@@ -53,10 +53,7 @@ public class EmployeeService {
 			uri += "topic-competencies";
 
 
-		System.out.println(uri);
 		ResponseEntity<EmployeeDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class);
-		System.out.println(responseEntity.getBody().length);
-		System.out.println(responseEntity.getBody());
 		if (responseEntity.getBody() != null){
 			return Arrays.asList(responseEntity.getBody());
 		}
