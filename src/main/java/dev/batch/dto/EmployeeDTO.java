@@ -11,6 +11,10 @@ public class EmployeeDTO {
 
 	private List<EmployeeTopicCompetency> topicCompetencies;
 
+	public EmployeeDTO(Employee employee) {
+		this.employee = employee;
+	}
+
 	public Employee getEmployee() {
 		return employee;
 	}
