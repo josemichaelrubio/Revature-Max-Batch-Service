@@ -26,6 +26,17 @@ public class BatchService {
 	@Autowired
 	private CurriculumService curriculumService;
 
+	public BatchService() {
+
+    }
+
+    public BatchService(BatchRepository batchRepository, BatchAssociatesRepository batchAssociatesRepository, EmployeeService employeeService, CurriculumService curriculumService) {
+        this.batchRepository = batchRepository;
+        this.batchAssociatesRepository = batchAssociatesRepository;
+        this.employeeService = employeeService;
+        this.curriculumService = curriculumService;
+    }
+
     public BatchResponse getBatchInfoAndAveragesById(long id) {
         // Get name, description and instructor of batch -- will later be passed to BatchResponse object
 
@@ -60,12 +71,12 @@ public class BatchService {
         return new BatchResponse(batch, quizAverages, tagAverages);
     }
 
-    public Batch getBasicBatchInfo(Long id) {
+    private Batch getBasicBatchInfo(Long id) {
         return batchRepository.findById(id).orElse(null);
 
     }
 
-    public List<QuizDTO> grabQuizNames(List<EmployeeQuizScore> empQuiz) {
+    private List<QuizDTO> grabQuizNames(List<EmployeeQuizScore> empQuiz) {
         // Grab quiz ids from EmployeeQuiz objects returned from the Employee Service
         List<Long> quizIds = new ArrayList<>();
         for (int i = 0; i < empQuiz.size(); i++) {
@@ -78,7 +89,7 @@ public class BatchService {
        return curriculumService.getQuizzesByListOfIds(quizIds);
     }
 
-    public Map<Long, List<String>> getQuizAveragesInfo(List<EmployeeQuizScore> empQuiz) {
+    private Map<Long, List<String>> getQuizAveragesInfo(List<EmployeeQuizScore> empQuiz) {
 
         // Retrive quiz names from curriculum service
         List<QuizDTO> quizDTOS = grabQuizNames(empQuiz);
@@ -122,7 +133,7 @@ public class BatchService {
         return averageScoreForQuizzes;
     }
 
-    public List<TopicDTO> grabTopicsAndTechNames(List<EmployeeTopicCompetency> employeeTopicCompetencies) {
+    private List<TopicDTO> grabTopicsAndTechNames(List<EmployeeTopicCompetency> employeeTopicCompetencies) {
 
         List<Long> topicIds = new ArrayList<>();
         for (int i = 0; i < employeeTopicCompetencies.size(); i++) {
@@ -135,7 +146,7 @@ public class BatchService {
     }
 
 
-    public Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id, List<EmployeeTopicCompetency> employeeTopicCompetencies) {
+    private Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id, List<EmployeeTopicCompetency> employeeTopicCompetencies) {
 
        List<TopicDTO> topicDTOS = grabTopicsAndTechNames(employeeTopicCompetencies);
        System.out.println(topicDTOS);
@@ -198,10 +209,7 @@ public class BatchService {
 		}
 		List<String> emailList = new ArrayList<>();
 		employeeEmails.forEach(employee -> emailList.add(employee.getEmail()));
-		//TODO: get the employee objects from Employee Service with the emails
-		// for now, only get returns (?) for people currently registered so this list may be shorter
-		List<Employee> fullEmployees = new ArrayList<>();
-		//fullEmployees = employeeService.getEmployeesByListOfEmails(emailList);
+		List<Employee> fullEmployees = employeeService.getEmployeesByListOfEmails(emailList);
 
 		List<BatchAssociates> associatesToAdd = new ArrayList<>();
 		fullEmployees.forEach(employee -> associatesToAdd.add(new BatchAssociates(new BatchAssociates.BatchAssociatesId(employee.getId(), batch))));

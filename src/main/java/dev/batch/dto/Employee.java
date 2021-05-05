@@ -18,11 +18,29 @@ public class Employee {
 	public Employee() {
 	}
 
+
+	public Employee(Long id, String email, String role, String name, String phoneNumber, String address, String pictureUrl) {
+		this.id = id;
+		this.email = email;
+		this.role = role;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.address = address;
+		this.pictureUrl = pictureUrl;
+	}
+
+
 	public Employee(Long id, String email, String role) {
 		this.id = id;
 		this.email = email;
 		this.role = role;
 	}
+
+	public Employee(String email) {
+		this.email = email;
+	}
+
+
 
 	public String getName() {
 		return name;

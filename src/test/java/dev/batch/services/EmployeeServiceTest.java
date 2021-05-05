@@ -1,6 +1,8 @@
 package dev.batch.services;
 
 import dev.batch.dto.Employee;
+import dev.batch.dto.EmployeeDTO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +41,9 @@ class EmployeeServiceTest {
 		assertEquals(expected, actual);
 	}
 
+
+
+	@Disabled
 	@Test
 	void getEmployeesByListOfIdsValid() {
 		List<Long> idList = new ArrayList<>();
@@ -47,17 +52,39 @@ class EmployeeServiceTest {
 		idList.add(3L);
 		idList.add(5L);
 
-		List<Employee> employeeList = new ArrayList<>();
-		employeeList.add(new Employee(1L, "1@web.com", "role"));
-		employeeList.add(new Employee(2L, "2@web.com", "role"));
-		employeeList.add(new Employee(3L, "3@web.com", "role"));
-		employeeList.add(new Employee(5L, "5@web.com", "role"));
+		List<EmployeeDTO> employeeList = new ArrayList<>();
+		employeeList.add(new EmployeeDTO(new Employee(1L, "1@web.com", "ASSOCIATE")));
+		employeeList.add(new EmployeeDTO(new Employee(2L, "2@web.com", "ASSOCIATE")));
+		employeeList.add(new EmployeeDTO(new Employee(3L, "3@web.com", "ASSOCIATE")));
+		employeeList.add(new EmployeeDTO(new Employee(5L, "5@web.com", "ASSOCIATE")));
 
 		String url = EMPLOYEE_SERVICE_URL + "?id=1,2,3,5";
-		when(restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class))
-				.thenReturn(new ResponseEntity<>((Employee[]) employeeList.toArray(), HttpStatus.OK));
+		when(restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class))
+				.thenReturn(new ResponseEntity<>((EmployeeDTO[]) employeeList.toArray(), HttpStatus.OK));
 
-		List<Employee> actual = employeeService.getEmployeesByListOfIds(idList);
+		List<EmployeeDTO> actual = employeeService.getEmployeesByListOfIds(idList, false, false);
 		assertEquals(employeeList, actual);
+	}
+
+	@Disabled
+	@Test
+	void getOneValidEmployeeByEmail() {
+		// Given
+		List<String> emailList = new ArrayList<>();
+		emailList.add("tucker@revature.net");
+
+		List<Employee> expectedEmployee = new ArrayList<>();
+		expectedEmployee.add(new Employee(1L, "tucker@revature.net", "ASSOCIATE"));
+
+
+		// when
+		String url = EMPLOYEE_SERVICE_URL + "?email=tucker@revature.net";
+		when(restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class))
+				.thenReturn(new ResponseEntity<>((Employee[]) expectedEmployee.toArray(), HttpStatus.OK));
+
+		List<Employee> actual = employeeService.getEmployeesByListOfEmails(emailList);
+
+		// then
+		assertEquals(expectedEmployee, actual);
 	}
 }

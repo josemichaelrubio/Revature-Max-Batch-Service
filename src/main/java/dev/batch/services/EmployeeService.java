@@ -51,10 +51,27 @@ public class EmployeeService {
 			uri += "quiz-scores,";
 		if (includeTopicCompetencies)
 			uri += "topic-competencies";
+		System.out.println(uri);
 
 
 		ResponseEntity<EmployeeDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class);
 		if (responseEntity.getBody() != null){
+			return Arrays.asList(responseEntity.getBody());
+		}
+		return new ArrayList<>();
+	}
+
+	public List<Employee> getEmployeesByListOfEmails(List<String> employeeEmails) {
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
+		StringBuilder stringOfEmails = new StringBuilder();
+		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
+		stringOfEmails.deleteCharAt(0);
+
+		uriComponentsBuilder.queryParam("email", stringOfEmails);
+		String uri = uriComponentsBuilder.toUriString();
+
+		ResponseEntity<Employee[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
+		if (responseEntity.getBody() != null) {
 			return Arrays.asList(responseEntity.getBody());
 		}
 		return new ArrayList<>();
