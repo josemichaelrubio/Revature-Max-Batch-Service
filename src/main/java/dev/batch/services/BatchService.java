@@ -57,6 +57,8 @@ public class BatchService {
                     employeeTopicCompetencies.add(employeeDTOS.get(i).getTopicCompetencies().get(j));
                 }
             }
+
+            
         }
 
         Batch batch = getBasicBatchInfo(id);
@@ -65,10 +67,14 @@ public class BatchService {
         Map<Long, List<String>> quizAverages = getQuizAveragesInfo(empQuiz);
 
 
-		//topic competencies for batch
-        Map<Long, List<String>> tagAverages = getTopicCompetencyAveragesInfo(id, employeeTopicCompetencies);
+		//topic competency averages for batch
+        Map<Long, List<String>> techAverages = getTopicCompetencyAveragesInfo(employeeTopicCompetencies);
 
-        return new BatchResponse(batch, quizAverages, tagAverages);
+        // personal qc rating averages
+
+        // instructor feedback averages
+
+        return new BatchResponse(batch, quizAverages, techAverages);
     }
 
     private Batch getBasicBatchInfo(Long id) {
@@ -146,16 +152,14 @@ public class BatchService {
     }
 
 
-    private Map<Long, List<String>> getTopicCompetencyAveragesInfo(Long id, List<EmployeeTopicCompetency> employeeTopicCompetencies) {
+    private Map<Long, List<String>> getTopicCompetencyAveragesInfo(List<EmployeeTopicCompetency> employeeTopicCompetencies) {
 
        List<TopicDTO> topicDTOS = grabTopicsAndTechNames(employeeTopicCompetencies);
-       System.out.println(topicDTOS);
 
         Map<Long, List<String>> averageTopicCompetencies = new TreeMap<>();
         Map<Long, List<Float>> competenciesForTechnology = new TreeMap<>();
         for (int i = 0; i < employeeTopicCompetencies.size(); i++) {
             Long topicId = employeeTopicCompetencies.get(i).getId().getTopicId();
-            // need to make sure to get topic name from curriculum service
             if (!(competenciesForTechnology.containsKey(topicId))){
                 competenciesForTechnology.put(topicId, new ArrayList<>());
                 competenciesForTechnology.get(topicId).add(employeeTopicCompetencies.get(i).getCompetency());
@@ -190,6 +194,11 @@ public class BatchService {
         return averageTopicCompetencies;
     }
 
+    private List<QCDTO> grabQCNames(List<Long> QCIds) {
+
+	    return null;
+    }
+
 
 
 	public List<EmployeeDTO> getAllAssociates(long batchId, boolean includeQuizScores, boolean includeTopicCompetencies) {
@@ -218,6 +227,7 @@ public class BatchService {
 
 		return fullEmployees;
     }
+
 
     @Transactional
     public void deleteAssociate(long batchId, long empId){
