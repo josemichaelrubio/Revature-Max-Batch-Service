@@ -6,6 +6,12 @@ public class EmployeeQuizScore {
 	private EmployeeQuizScoreId id;
 	private float score;
 
+	public EmployeeQuizScore(EmployeeQuizScoreId id, float score) {
+		this.id = id;
+		this.score = score;
+
+	}
+
 	public EmployeeQuizScoreId getId() {
 		return id;
 	}
@@ -46,6 +52,11 @@ public class EmployeeQuizScore {
 	public static class EmployeeQuizScoreId {
 		private Long employeeId;
 		private Long quizId;
+
+		public EmployeeQuizScoreId(Long employeeId, Long quizId) {
+			this.employeeId = employeeId;
+			this.quizId = quizId;
+		}
 
 		public Long getEmployeeId() {
 			return employeeId;
