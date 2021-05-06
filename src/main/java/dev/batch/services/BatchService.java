@@ -58,7 +58,7 @@ public class BatchService {
                 }
             }
 
-            
+
         }
 
         Batch batch = getBasicBatchInfo(id);

@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class QCDTO {
 
-    Long id;
-    String name;
-    List<Tech> techs;
+    private Long id;
+    private String name;
+    private List<Tech> techs;
 
     public QCDTO() { }
 
