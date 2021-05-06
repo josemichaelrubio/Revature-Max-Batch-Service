@@ -2,16 +2,16 @@ package dev.batch.dto;
 
 import java.util.Objects;
 
-public class QCFeedback {
+public class EmployeeQCFeedback {
 
     private QCFeedbackId id;
     private Employee employee;
     private Integer associateRating;
     private Integer instructorFeedback;
 
-    public QCFeedback() {}
+    public EmployeeQCFeedback() {}
 
-    public QCFeedback(QCFeedbackId id, Employee employee, Integer associateRating, Integer instructorFeedback) {
+    public EmployeeQCFeedback(QCFeedbackId id, Employee employee, Integer associateRating, Integer instructorFeedback) {
         this.id = id;
         this.employee = employee;
         this.associateRating = associateRating;
@@ -54,7 +54,7 @@ public class QCFeedback {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        QCFeedback that = (QCFeedback) o;
+        EmployeeQCFeedback that = (EmployeeQCFeedback) o;
         return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(associateRating, that.associateRating) && Objects.equals(instructorFeedback, that.instructorFeedback);
     }
 
