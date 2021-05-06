@@ -62,7 +62,7 @@ class EmployeeServiceTest {
 		when(restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class))
 				.thenReturn(new ResponseEntity<>((EmployeeDTO[]) employeeList.toArray(), HttpStatus.OK));
 
-		List<EmployeeDTO> actual = employeeService.getEmployeesByListOfIds(idList, false, false);
+		List<EmployeeDTO> actual = employeeService.getEmployeesByListOfIds(idList, false, false, false);
 		assertEquals(employeeList, actual);
 	}
 

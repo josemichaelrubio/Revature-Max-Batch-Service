@@ -37,7 +37,7 @@ public class EmployeeService {
 //		return restTemplate.getForObject(requestUrl, Employee.class);
 	}
 
-	public List<EmployeeDTO> getEmployeesByListOfIds(List<Long> employeeIds, boolean includeQuizScores, boolean includeTopicCompetencies){
+	public List<EmployeeDTO> getEmployeesByListOfIds(List<Long> employeeIds, boolean includeQuizScores, boolean includeTopicCompetencies, boolean includeQCFeedback){
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
 		StringBuilder stringOfIds = new StringBuilder();
 		employeeIds.forEach(id-> stringOfIds.append(",").append(id));
@@ -50,8 +50,9 @@ public class EmployeeService {
 		if (includeQuizScores)
 			uri += "quiz-scores,";
 		if (includeTopicCompetencies)
-			uri += "topic-competencies";
-		System.out.println(uri);
+			uri += "topic-competencies,";
+		if (includeQCFeedback)
+			uri += "qc-feedbacks";
 
 
 		ResponseEntity<EmployeeDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class);

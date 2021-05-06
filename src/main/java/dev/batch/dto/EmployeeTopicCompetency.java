@@ -50,6 +50,11 @@ public class EmployeeTopicCompetency {
 		private Long employeeId;
 		private Long topicId;
 
+		public EmployeeTopicCompetencyId(Long employeeId, Long topicId) {
+			this.employeeId = employeeId;
+			this.topicId = topicId;
+		}
+
 		public Long getEmployeeId() {
 			return employeeId;
 		}
