@@ -40,7 +40,7 @@ public class BatchController {
     @GetMapping("/{batch-id}/associates")
     public ResponseEntity<List<EmployeeDTO>> getAssociates(@PathVariable("batch-id") long batchId) {
         logger.info("Accessing all associates listed under batch id: "+batchId);
-        return ResponseEntity.ok().body(batchService.getAllAssociates(batchId, false, false));
+        return ResponseEntity.ok().body(batchService.getAllAssociates(batchId, false, false, false));
     }
 
     @PostMapping("/{batch-id}/associates")

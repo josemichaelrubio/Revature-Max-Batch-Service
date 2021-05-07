@@ -54,6 +54,7 @@ public class CurriculumService {
 	// similar method for topics
 
 	public List<TopicDTO> getTopicsByListOfIds(List<Long> topicIds) {
+		System.out.println(topicIds);
 		String requestUrl = CURRICULUM_SERVICE_URL + "/topics";
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(requestUrl);
 		StringBuilder stringOfIds = new StringBuilder();
