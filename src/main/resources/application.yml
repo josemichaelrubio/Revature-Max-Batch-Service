@@ -15,9 +15,9 @@ spring:
     restart:
       enabled: true
   datasource:
-    url: jdbc:sqlserver://ashields-revature.database.windows.net:1433;databaseName=curriculumservice
-    username: andrew.shields@ashields-revature
-    password: in2Space!
+    url: jdbc:sqlserver://l4g.database.windows.net:1433;databaseName=employee-practice
+    username: l4gadmin@l4g
+    password: "#DDjjL4G"
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
