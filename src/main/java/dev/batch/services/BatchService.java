@@ -235,7 +235,7 @@ public class BatchService {
 		fullEmployees.forEach(employee -> associatesToAdd.add(new BatchAssociates(new BatchAssociates.BatchAssociatesId(employee.getId(), batch))));
 
 		associatesToAdd.forEach(batchAssociate -> batchAssociatesRepository.save(batchAssociate));
-
+        employeeService.sendBatchEmails(emailList, batchId);
 		return fullEmployees;
     }
 
