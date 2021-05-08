@@ -40,12 +40,11 @@ public class BatchController {
     @GetMapping("/{batch-id}/associates")
     public ResponseEntity<List<EmployeeDTO>> getAssociates(@PathVariable("batch-id") long batchId) {
         logger.info("Accessing all associates listed under batch id: "+batchId);
-        return ResponseEntity.ok().body(batchService.getAllAssociates(batchId, false, false));
+        return ResponseEntity.ok().body(batchService.getAllAssociates(batchId, false, false, false));
     }
 
     @PostMapping("/{batch-id}/associates")
     public ResponseEntity<List<Employee>> postAssociates(@PathVariable("batch-id") long batchId,
-                                                         @RequestHeader("Authorization")String authorization,
                                                          @RequestBody List<Employee> employeeEmails)
     {
         logger.info("trainer adding employees: "+employeeEmails+" to batch: "+batchId);
@@ -54,7 +53,6 @@ public class BatchController {
 
     @DeleteMapping("/{batch-id}/associates/{employee-id}")
     public ResponseEntity<HttpStatus> deleteAssociate(@PathVariable("batch-id") long batchId,
-                                                      @RequestHeader("Authorization") String authorization,
                                                       @PathVariable("employee-id") long employeeId)
     {
             logger.info("Trainer is removing employee, "+employeeId+", from batch: "+batchId);

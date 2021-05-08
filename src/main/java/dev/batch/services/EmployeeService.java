@@ -37,7 +37,7 @@ public class EmployeeService {
 //		return restTemplate.getForObject(requestUrl, Employee.class);
 	}
 
-	public List<EmployeeDTO> getEmployeesByListOfIds(List<Long> employeeIds, boolean includeQuizScores, boolean includeTopicCompetencies){
+	public List<EmployeeDTO> getEmployeesByListOfIds(List<Long> employeeIds, boolean includeQuizScores, boolean includeTopicCompetencies, boolean includeQCFeedback){
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
 		StringBuilder stringOfIds = new StringBuilder();
 		employeeIds.forEach(id-> stringOfIds.append(",").append(id));
@@ -50,7 +50,9 @@ public class EmployeeService {
 		if (includeQuizScores)
 			uri += "quiz-scores,";
 		if (includeTopicCompetencies)
-			uri += "topic-competencies";
+			uri += "topic-competencies,";
+		if (includeQCFeedback)
+			uri += "qc-feedbacks";
 
 
 		ResponseEntity<EmployeeDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class);
@@ -58,5 +60,33 @@ public class EmployeeService {
 			return Arrays.asList(responseEntity.getBody());
 		}
 		return new ArrayList<>();
+	}
+
+	public List<Employee> getEmployeesByListOfEmails(List<String> employeeEmails) {
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
+		StringBuilder stringOfEmails = new StringBuilder();
+		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
+		stringOfEmails.deleteCharAt(0);
+
+		uriComponentsBuilder.queryParam("email", stringOfEmails);
+		String uri = uriComponentsBuilder.toUriString();
+
+		ResponseEntity<Employee[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
+		if (responseEntity.getBody() != null) {
+			return Arrays.asList(responseEntity.getBody());
+		}
+		return new ArrayList<>();
+	}
+
+	public void sendBatchEmails(List<String> employeeEmails, long batchId) {
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://employee-service/verify");
+		StringBuilder stringOfEmails = new StringBuilder();
+		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
+		stringOfEmails.deleteCharAt(0);
+
+		uriComponentsBuilder.queryParam("email", stringOfEmails);
+		uriComponentsBuilder.queryParam("batchId", batchId);
+		String uri = uriComponentsBuilder.toUriString();
+		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
 	}
 }
