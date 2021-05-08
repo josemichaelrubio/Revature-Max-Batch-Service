@@ -12,7 +12,7 @@ pipeline {
    stages {
       stage('checkout'){
           steps {
-            git branch: 'dev', url: 'https://gitlab.com/210301-java-azure/project3/revature-max-batch-service.git'
+            git branch: 'master', url: 'https://gitlab.com/210301-java-azure/project3/revature-max-batch-service.git'
           }
       }
       stage('clean') {
