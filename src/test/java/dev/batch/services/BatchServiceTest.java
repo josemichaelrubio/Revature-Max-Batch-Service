@@ -1,78 +1,72 @@
 package dev.batch.services;
 
-import dev.batch.dto.Employee;
-import dev.batch.dto.EmployeeDTO;
-import dev.batch.dto.EmployeeQuizScore;
+import dev.batch.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class BatchServiceTest {
 
     @InjectMocks
-    private EmployeeService employeeService;
-
-    @InjectMocks
-    private CurriculumService curriculumService;
-
-    @Autowired
     private BatchService batchService;
+    @MockBean
+    private CurriculumService curriculumService;
 
 
 
     @Test
-    public void shouldGetQuizScoresForEmployees() {
+    public void shouldGetQCFeedbackForEmployees() {
 
         // given
         Employee employee1 = new Employee(1L, "e@email.com", "ASSOCIATE");
         Employee employee2 = new Employee(2L, "t@email.com", "ASSOCIATE");
 
-        EmployeeQuizScore.EmployeeQuizScoreId employee1QuizScore1Id = new EmployeeQuizScore.EmployeeQuizScoreId(1L, 1L);
-        EmployeeQuizScore.EmployeeQuizScoreId employee1QuizScore2Id = new EmployeeQuizScore.EmployeeQuizScoreId(1L, 2L);
-        EmployeeQuizScore.EmployeeQuizScoreId employee2QuizScore1Id = new EmployeeQuizScore.EmployeeQuizScoreId(2L, 1L);
-        EmployeeQuizScore.EmployeeQuizScoreId employee2QuizScore2Id = new EmployeeQuizScore.EmployeeQuizScoreId(2L, 2L);
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(1L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(1L, 2L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(2L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(2L, 2L);
 
-        EmployeeQuizScore employee1QuizScore1 = new EmployeeQuizScore(employee1QuizScore1Id, 95);
-        EmployeeQuizScore employee1QuizScore2 = new EmployeeQuizScore(employee1QuizScore2Id, 80);
-        EmployeeQuizScore employee2QuizScore1 = new EmployeeQuizScore(employee2QuizScore1Id, 90);
-        EmployeeQuizScore employee2QuizScore2 = new EmployeeQuizScore(employee2QuizScore2Id, 98);
+        EmployeeQCFeedback employee1QCFeedback1 = new EmployeeQCFeedback(employee1QCFeedback1Id, 4, 5);
+        EmployeeQCFeedback employee1QCFeedback2 = new EmployeeQCFeedback(employee1QCFeedback2Id, 2, 2);
+        EmployeeQCFeedback employee2QCFeedback1 = new EmployeeQCFeedback(employee2QCFeedback1Id, 3, 4);
+        EmployeeQCFeedback employee2QCFeedback2 = new EmployeeQCFeedback(employee2QCFeedback2Id, 1,2);
 
-        List<EmployeeQuizScore> employee1QuizScores = new LinkedList<>();
-        List<EmployeeQuizScore> employee2QuizScores = new LinkedList<>();
-        employee1QuizScores.add(employee1QuizScore1);
-        employee1QuizScores.add(employee1QuizScore2);
-        employee2QuizScores.add(employee2QuizScore1);
-        employee2QuizScores.add(employee2QuizScore2);
+        List<EmployeeQCFeedback> employee1QCFeedback = new LinkedList<>();
+        List<EmployeeQCFeedback> employee2QCFeedback = new LinkedList<>();
+        employee1QCFeedback.add(employee1QCFeedback1);
+        employee1QCFeedback.add(employee1QCFeedback2);
+        employee2QCFeedback.add(employee2QCFeedback1);
+        employee2QCFeedback.add(employee2QCFeedback2);
 
-        EmployeeDTO employeeDTO1 = new EmployeeDTO(employee1, employee1QuizScores);
-        EmployeeDTO employeeDTO2 = new EmployeeDTO(employee2, employee2QuizScores);
+        EmployeeDTO employeeDTO1 = new EmployeeDTO(employee1, employee1QCFeedback);
+        EmployeeDTO employeeDTO2 = new EmployeeDTO(employee2, employee2QCFeedback);
 
         List<EmployeeDTO> employeeDTOS = new ArrayList<>();
         employeeDTOS.add(employeeDTO1);
         employeeDTOS.add(employeeDTO2);
 
         // when
-        List<EmployeeQuizScore> expected = new LinkedList<>();
-        expected.add(employee1QuizScore1);
-        expected.add(employee1QuizScore2);
-        expected.add(employee2QuizScore1);
-        expected.add(employee2QuizScore2);
+        List<EmployeeQCFeedback> expected = new LinkedList<>();
+        expected.add(employee1QCFeedback1);
+        expected.add(employee1QCFeedback2);
+        expected.add(employee2QCFeedback1);
+        expected.add(employee2QCFeedback2);
 
         System.out.println(expected);
         System.out.println(employeeDTOS);
 
-        List<EmployeeQuizScore> actual = batchService.getQuizScoresFromEmployees(employeeDTOS);
+        List<EmployeeQCFeedback> actual = batchService.getQCFeedBackFromEmployees(employeeDTOS);
 
         System.out.println(actual);
 
@@ -80,6 +74,125 @@ public class BatchServiceTest {
         assertEquals(expected, actual);
 
 
+    }
+
+    @Test
+    public void shouldGrabQCNames() {
+
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(1L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(1L, 2L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(2L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(2L, 2L);
+
+        EmployeeQCFeedback employee1QCFeedback1 = new EmployeeQCFeedback(employee1QCFeedback1Id, 4, 5);
+        EmployeeQCFeedback employee1QCFeedback2 = new EmployeeQCFeedback(employee1QCFeedback2Id, 2, 2);
+        EmployeeQCFeedback employee2QCFeedback1 = new EmployeeQCFeedback(employee2QCFeedback1Id, 3, 4);
+        EmployeeQCFeedback employee2QCFeedback2 = new EmployeeQCFeedback(employee2QCFeedback2Id, 1,2);
+
+        List<EmployeeQCFeedback> qcFeedbacks = new LinkedList<>();
+        qcFeedbacks.add(employee1QCFeedback1);
+        qcFeedbacks.add(employee1QCFeedback2);
+        qcFeedbacks.add(employee2QCFeedback1);
+        qcFeedbacks.add(employee2QCFeedback2);
+
+        List<Long> qcIds = new ArrayList<>();
+        qcIds.add(1L);
+        qcIds.add(2L);
+        List<QCDTO> qcdtos = new ArrayList<>();
+        qcdtos.add(new QCDTO(1L, "QC 1"));
+        qcdtos.add(new QCDTO(2L, "QC 2"));
+
+
+        when(curriculumService.getQCNamesByListOfIds(qcIds)).thenReturn(qcdtos);
+
+        List<QCDTO> actual = batchService.grabQCNames(qcFeedbacks);
+
+        assertEquals(qcdtos, actual);
+
+    }
+
+    @Test
+    public void shouldComputeQCRatingAverages() {
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(1L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(1L, 2L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(2L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(2L, 2L);
+
+        EmployeeQCFeedback employee1QCFeedback1 = new EmployeeQCFeedback(employee1QCFeedback1Id, 4, 5);
+        EmployeeQCFeedback employee1QCFeedback2 = new EmployeeQCFeedback(employee1QCFeedback2Id, 2, 2);
+        EmployeeQCFeedback employee2QCFeedback1 = new EmployeeQCFeedback(employee2QCFeedback1Id, 3, 4);
+        EmployeeQCFeedback employee2QCFeedback2 = new EmployeeQCFeedback(employee2QCFeedback2Id, 1,2);
+
+        List<EmployeeQCFeedback> qcFeedbacks = new LinkedList<>();
+        qcFeedbacks.add(employee1QCFeedback1);
+        qcFeedbacks.add(employee1QCFeedback2);
+        qcFeedbacks.add(employee2QCFeedback1);
+        qcFeedbacks.add(employee2QCFeedback2);
+
+        List<QCDTO> qcdtos = new ArrayList<>();
+        qcdtos.add(new QCDTO(1L, "QC 1"));
+        qcdtos.add(new QCDTO(2L, "QC 2"));
+
+        when(batchService.grabQCNames(qcFeedbacks)).thenReturn(qcdtos);
+
+        List<String> qc1 = new ArrayList<>();
+        qc1.add("QC 1");
+        qc1.add("3.5");
+        qc1.add("2");
+        List<String> qc2 = new ArrayList<>();
+        qc2.add("QC 2");
+        qc2.add("1.5");
+        qc2.add("2");
+
+        Map<Long, List<String>> expected = new TreeMap<>();
+        expected.put(1L, qc1);
+        expected.put(2L, qc2);
+
+        Map<Long, List<String>> actual = batchService.getQCRatingsAverages(qcFeedbacks);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldComputeQCInstructorFeedbackAverages() {
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(1L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee1QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(1L, 2L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback1Id = new EmployeeQCFeedback.QCFeedbackId(2L, 1L);
+        EmployeeQCFeedback.QCFeedbackId employee2QCFeedback2Id = new EmployeeQCFeedback.QCFeedbackId(2L, 2L);
+
+        EmployeeQCFeedback employee1QCFeedback1 = new EmployeeQCFeedback(employee1QCFeedback1Id, 4, 5);
+        EmployeeQCFeedback employee1QCFeedback2 = new EmployeeQCFeedback(employee1QCFeedback2Id, 2, 2);
+        EmployeeQCFeedback employee2QCFeedback1 = new EmployeeQCFeedback(employee2QCFeedback1Id, 3, 4);
+        EmployeeQCFeedback employee2QCFeedback2 = new EmployeeQCFeedback(employee2QCFeedback2Id, 1,2);
+
+        List<EmployeeQCFeedback> qcFeedbacks = new LinkedList<>();
+        qcFeedbacks.add(employee1QCFeedback1);
+        qcFeedbacks.add(employee1QCFeedback2);
+        qcFeedbacks.add(employee2QCFeedback1);
+        qcFeedbacks.add(employee2QCFeedback2);
+
+        List<QCDTO> qcdtos = new ArrayList<>();
+        qcdtos.add(new QCDTO(1L, "QC 1"));
+        qcdtos.add(new QCDTO(2L, "QC 2"));
+
+        when(batchService.grabQCNames(qcFeedbacks)).thenReturn(qcdtos);
+
+        List<String> qc1 = new ArrayList<>();
+        qc1.add("QC 1");
+        qc1.add("4.5");
+        qc1.add("2");
+        List<String> qc2 = new ArrayList<>();
+        qc2.add("QC 2");
+        qc2.add("2.0");
+        qc2.add("2");
+
+        Map<Long, List<String>> expected = new TreeMap<>();
+        expected.put(1L, qc1);
+        expected.put(2L, qc2);
+
+        Map<Long, List<String>> actual = batchService.getQCInstructorFeedbackAverages(qcFeedbacks);
+
+        assertEquals(expected, actual);
     }
 
 
