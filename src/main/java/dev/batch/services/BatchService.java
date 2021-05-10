@@ -36,7 +36,6 @@ public class BatchService {
 
         List<EmployeeQuizScore> empQuiz = getQuizScoresFromEmployees(employeeDTOS);
         List<EmployeeTopicCompetency> employeeTopicCompetencies = getTopicCompetenciesFromEmployees(employeeDTOS);
-        // TODO: More qc stuff
         List<EmployeeQCFeedback> employeeQCFeedbacks = getQCFeedBackFromEmployees(employeeDTOS);
 
 
@@ -45,15 +44,17 @@ public class BatchService {
         //quizAverages for batch
         Map<Long, List<String>> quizAverages = getQuizAveragesInfo(empQuiz);
 
-
 		//topic competency averages for batch
         Map<Long, List<String>> techAverages = getTopicCompetencyAveragesInfo(employeeTopicCompetencies);
 
         // personal qc rating averages
+        Map<Long, List<String>> qcRatingAverages = getQCRatingsAverages(employeeQCFeedbacks);
 
         // instructor feedback averages
+        Map<Long, List<String>> qcInstructorFeedbackAverages = getQCInstructorFeedbackAverages(employeeQCFeedbacks);
 
-        return new BatchResponse(batch, quizAverages, techAverages);
+
+        return new BatchResponse(batch, quizAverages, techAverages, qcRatingAverages, qcInstructorFeedbackAverages);
     }
 
 
@@ -187,7 +188,7 @@ public class BatchService {
                 sum += competenciesForTechnology.get(key).get(i);
             }
             float average = (float) sum/length;
-            String formattedAverage = String.format("%.2f", average);
+            String formattedAverage = String.format("%.1f", average);
             String formatCount = Integer.toString(length);
             averageTopicCompetencies.get(key).add(formattedAverage);
             averageTopicCompetencies.get(key).add(formatCount);
@@ -205,9 +206,102 @@ public class BatchService {
             }
 
         }
-
         return empQCFeedbacks;
 
+    }
+
+    public List<QCDTO> grabQCNames(List<EmployeeQCFeedback> employeeQCFeedbacks) {
+        List<Long> qcIds = new ArrayList<>();
+        for (int i = 0; i < employeeQCFeedbacks.size(); i++) {
+            if (!(qcIds.contains(employeeQCFeedbacks.get(i).getId().getQcId()))){
+                qcIds.add(employeeQCFeedbacks.get(i).getId().getQcId());
+            }
+
+        }
+        // Send a list of these qc ids to the Curriculum Service to get associated qc name
+        return curriculumService.getQCNamesByListOfIds(qcIds);
+    }
+
+    public Map<Long, List<String>> getQCRatingsAverages(List<EmployeeQCFeedback> employeeQCFeedbacks) {
+        List<QCDTO> qcDTOs = grabQCNames(employeeQCFeedbacks);
+
+        Map<Long, List<String>> averageQCRatings = new TreeMap<>();
+        Map<Long, List<Integer>> ratingsForQC = new TreeMap<>();
+        for (int i = 0; i < employeeQCFeedbacks.size(); i++) {
+            Long qcId = employeeQCFeedbacks.get(i).getId().getQcId();
+            if (!(ratingsForQC.containsKey(qcId))){
+                ratingsForQC.put(qcId, new ArrayList<>());
+                ratingsForQC.get(qcId).add(employeeQCFeedbacks.get(i).getAssociateRating());
+                averageQCRatings.put(qcId, new ArrayList<>());
+                for (int j = 0; j < qcDTOs.size(); j++) {
+                    if (qcId.equals(qcDTOs.get(j).getId())) {
+                        String qcName = qcDTOs.get(j).getName();
+                        averageQCRatings.get(qcId).add(qcName);
+                        break;
+                    }
+                }
+            }
+            else {
+                ratingsForQC.get(qcId).add(employeeQCFeedbacks.get(i).getAssociateRating());
+            }
+        }
+
+        for (Long key : ratingsForQC.keySet()) {
+            int length = ratingsForQC.get(key).size();
+            int sum = 0;
+            for (int i = 0; i < length; i++) {
+                sum += ratingsForQC.get(key).get(i);
+            }
+            float average = (float) sum/length;
+            String formattedAverage = String.format("%.1f", average);
+            String formatCount = Integer.toString(length);
+            averageQCRatings.get(key).add(formattedAverage);
+            averageQCRatings.get(key).add(formatCount);
+
+        }
+
+        return averageQCRatings;
+    }
+
+    public Map<Long, List<String>> getQCInstructorFeedbackAverages(List<EmployeeQCFeedback> employeeQCFeedbacks) {
+        List<QCDTO> qcDTOs = grabQCNames(employeeQCFeedbacks);
+
+        Map<Long, List<String>> averageQCInstructorFeedbacks = new TreeMap<>();
+        Map<Long, List<Integer>> feedbacksForQC = new TreeMap<>();
+        for (int i = 0; i < employeeQCFeedbacks.size(); i++) {
+            Long qcId = employeeQCFeedbacks.get(i).getId().getQcId();
+            if (!(feedbacksForQC.containsKey(qcId))){
+                feedbacksForQC.put(qcId, new ArrayList<>());
+                feedbacksForQC.get(qcId).add(employeeQCFeedbacks.get(i).getInstructorFeedback());
+                averageQCInstructorFeedbacks.put(qcId, new ArrayList<>());
+                for (int j = 0; j < qcDTOs.size(); j++) {
+                    if (qcId.equals(qcDTOs.get(j).getId())) {
+                        String qcName = qcDTOs.get(j).getName();
+                        averageQCInstructorFeedbacks.get(qcId).add(qcName);
+                        break;
+                    }
+                }
+            }
+            else {
+                feedbacksForQC.get(qcId).add(employeeQCFeedbacks.get(i).getInstructorFeedback());
+            }
+        }
+
+        for (Long key : feedbacksForQC.keySet()) {
+            int length = feedbacksForQC.get(key).size();
+            int sum = 0;
+            for (int i = 0; i < length; i++) {
+                sum += feedbacksForQC.get(key).get(i);
+            }
+            float average = (float) sum/length;
+            String formattedAverage = String.format("%.1f", average);
+            String formatCount = Integer.toString(length);
+            averageQCInstructorFeedbacks.get(key).add(formattedAverage);
+            averageQCInstructorFeedbacks.get(key).add(formatCount);
+
+        }
+
+        return averageQCInstructorFeedbacks;
     }
 
 
