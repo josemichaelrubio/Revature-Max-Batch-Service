@@ -1,4 +1,35 @@
 server:
+  port: 8086
+
+spring:
+  application:
+    name: batch-service
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+    url: jdbc:sqlserver://ashields-revature.database.windows.net:1433;databaseName=curriculumservice
+    username: andrew.shields@ashields-revature
+    password: in2Space!
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+
+---
+
+server:
   port: 8083
 spring:
   application:
