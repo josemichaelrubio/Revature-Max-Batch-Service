@@ -232,11 +232,23 @@ public class BatchService {
 		List<Employee> fullEmployees = employeeService.getEmployeesByListOfEmails(emailList);
 
 		List<BatchAssociates> associatesToAdd = new ArrayList<>();
-		fullEmployees.forEach(employee -> associatesToAdd.add(new BatchAssociates(new BatchAssociates.BatchAssociatesId(employee.getId(), batch))));
+		List<Employee> notVerified = new ArrayList<>();
 
+		/* todo: updated this method to account for unverified users.  They will NOT be added to the batch if they are still
+		    unverified, however they are still prompted with another verification email.
+        */
+		fullEmployees.forEach(employee -> {
+                if(!employee.getRole().equals("GUEST")) {
+                    associatesToAdd.add(new BatchAssociates(new BatchAssociates.BatchAssociatesId(employee.getId(), batch)));
+                } else {
+                    notVerified.add(employee);
+                }
+		});
 		associatesToAdd.forEach(batchAssociate -> batchAssociatesRepository.save(batchAssociate));
-        employeeService.sendBatchEmails(emailList, batchId);
-		return fullEmployees;
+        employeeService.sendBatchEmails(emailList, batch.getName(), batch.getDescription(), batch.getLocation(), batch.getTrainerId());
+
+        //todo: now returns unverified users so it can be displayed on the front end/to instructor so they can reach out
+		return notVerified;
     }
 
 
