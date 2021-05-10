@@ -41,7 +41,9 @@ public class EmployeeService {
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
 		StringBuilder stringOfIds = new StringBuilder();
 		employeeIds.forEach(id-> stringOfIds.append(",").append(id));
-		stringOfIds.deleteCharAt(0); // probably a better way to do this
+
+		//Todo is this still necessary?
+//		stringOfIds.deleteCharAt(0); // probably a better way to do this
 
 		// Don't remember the name of the query param
 		uriComponentsBuilder.queryParam("id", stringOfIds);
@@ -78,15 +80,30 @@ public class EmployeeService {
 		return new ArrayList<>();
 	}
 
-	public void sendBatchEmails(List<String> employeeEmails, long batchId) {
+//	public void sendBatchEmails(List<String> employeeEmails, long batchId) {
+//		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://employee-service/verify");
+//		StringBuilder stringOfEmails = new StringBuilder();
+//		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
+//		stringOfEmails.deleteCharAt(0);
+//
+//		uriComponentsBuilder.queryParam("emails", stringOfEmails);
+//		uriComponentsBuilder.queryParam("batchId", batchId);
+//		String uri = uriComponentsBuilder.toUriString();
+//		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String[]>(new HttpHeaders()), String[].class);
+//	}
+
+	public void sendBatchEmails(List<String> employeeEmails, String name, String description, String location, Long trainerId) {
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://employee-service/verify");
 		StringBuilder stringOfEmails = new StringBuilder();
 		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
 		stringOfEmails.deleteCharAt(0);
 
-		uriComponentsBuilder.queryParam("email", stringOfEmails);
-		uriComponentsBuilder.queryParam("batchId", batchId);
+		uriComponentsBuilder.queryParam("emails", stringOfEmails);
+		uriComponentsBuilder.queryParam("name", name);
+		uriComponentsBuilder.queryParam("description", description);
+		uriComponentsBuilder.queryParam("location", location);
+		uriComponentsBuilder.queryParam("trainerId", trainerId);
 		String uri = uriComponentsBuilder.toUriString();
-		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
+		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String[]>(new HttpHeaders()), String[].class);
 	}
 }
