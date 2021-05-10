@@ -33,7 +33,6 @@ public class BatchController {
     @ResponseBody
     @GetMapping(value = "/{batch-id}", produces = "application/json")
     public ResponseEntity<BatchResponse> handleGetBatchInfoById(@PathVariable("batch-id") long id) {
-        System.out.println("In batch service");
         return ResponseEntity.ok(batchService.getBatchInfoAndAveragesById(id));
     }
 
