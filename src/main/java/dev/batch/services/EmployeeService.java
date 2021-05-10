@@ -77,4 +77,16 @@ public class EmployeeService {
 		}
 		return new ArrayList<>();
 	}
+
+	public void sendBatchEmails(List<String> employeeEmails, long batchId) {
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://employee-service/verify");
+		StringBuilder stringOfEmails = new StringBuilder();
+		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
+		stringOfEmails.deleteCharAt(0);
+
+		uriComponentsBuilder.queryParam("email", stringOfEmails);
+		uriComponentsBuilder.queryParam("batchId", batchId);
+		String uri = uriComponentsBuilder.toUriString();
+		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
+	}
 }
