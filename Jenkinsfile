@@ -2,7 +2,7 @@ pipeline {
    agent any
 
     environment {
-        PORT="9990"
+        PORT="8083"
         IMAGE_TAG="batch"
         CONTAINER_NAME="batch-service"
         DB_URL=credentials('DB_URL')
