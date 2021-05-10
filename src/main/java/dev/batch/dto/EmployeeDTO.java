@@ -29,9 +29,9 @@ public class EmployeeDTO {
 		this.qcFeedbacks = qcFeedbacks;
 	}
 
-	public EmployeeDTO(Employee employee, List<EmployeeQuizScore> quizScores) {
+	public EmployeeDTO(Employee employee, List<EmployeeQCFeedback> qcFeedbacks) {
 		this.employee = employee;
-		this.quizScores = quizScores;
+		this.qcFeedbacks = qcFeedbacks;
 	}
 
 	public Employee getEmployee() {

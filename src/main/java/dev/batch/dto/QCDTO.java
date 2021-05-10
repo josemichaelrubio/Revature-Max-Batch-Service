@@ -7,14 +7,12 @@ public class QCDTO {
 
     private Long id;
     private String name;
-    private List<Tech> techs;
 
     public QCDTO() { }
 
-    public QCDTO(Long id, String name, List<Tech> techs) {
+    public QCDTO(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.techs = techs;
     }
 
     public Long getId() {
@@ -33,25 +31,17 @@ public class QCDTO {
         this.name = name;
     }
 
-    public List<Tech> getTechs() {
-        return techs;
-    }
-
-    public void setTechs(List<Tech> techs) {
-        this.techs = techs;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QCDTO qcdto = (QCDTO) o;
-        return Objects.equals(id, qcdto.id) && Objects.equals(name, qcdto.name) && Objects.equals(techs, qcdto.techs);
+        return Objects.equals(id, qcdto.id) && Objects.equals(name, qcdto.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, techs);
+        return Objects.hash(id, name);
     }
 
     @Override
@@ -59,7 +49,6 @@ public class QCDTO {
         return "QCDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", techs=" + techs +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package dev.batch.services;
 
+import dev.batch.dto.QCDTO;
 import dev.batch.dto.QuizDTO;
 import dev.batch.dto.TopicDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,6 @@ public class CurriculumService {
 	// similar method for topics
 
 	public List<TopicDTO> getTopicsByListOfIds(List<Long> topicIds) {
-		System.out.println(topicIds);
 		String requestUrl = CURRICULUM_SERVICE_URL + "/topics";
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(requestUrl);
 		StringBuilder stringOfIds = new StringBuilder();
@@ -70,6 +70,24 @@ public class CurriculumService {
 		}
 		return new ArrayList<>();
 
+	}
+
+	public List<QCDTO> getQCNamesByListOfIds(List<Long> qcIds) {
+		String requestUrl = CURRICULUM_SERVICE_URL + "/qcs";
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(requestUrl);
+		StringBuilder stringOfIds = new StringBuilder();
+		qcIds.forEach(id -> stringOfIds.append(",").append(id));
+		stringOfIds.deleteCharAt(0);
+
+		uriComponentsBuilder.queryParam("qcIds", stringOfIds);
+		String uri = uriComponentsBuilder.toUriString();
+
+		ResponseEntity<QCDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<QCDTO[]>(new HttpHeaders()), QCDTO[].class);
+		if (responseEntity.getBody() != null) {
+			return Arrays.asList(responseEntity.getBody());
+		}
+
+		return new ArrayList<>();
 	}
 
 }
