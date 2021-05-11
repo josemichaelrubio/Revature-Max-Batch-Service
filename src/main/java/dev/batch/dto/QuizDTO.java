@@ -7,7 +7,6 @@ public class QuizDTO {
 	private String name;
 
 	public QuizDTO() {
-		//super();
 	}
 
 	public QuizDTO(Long quizId, String name) {

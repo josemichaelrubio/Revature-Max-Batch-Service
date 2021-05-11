@@ -117,7 +117,7 @@ public class BatchService {
 
         for (Long key : scoresForQuiz.keySet()) {
             int length = scoresForQuiz.get(key).size();
-            int sum = 0;
+            float sum = 0;
             for (int i = 0; i < length; i++) {
                 sum += scoresForQuiz.get(key).get(i);
             }
@@ -183,7 +183,7 @@ public class BatchService {
 
         for (Long key : competenciesForTechnology.keySet()) {
             int length = competenciesForTechnology.get(key).size();
-            int sum = 0;
+            float sum = 0;
             for (int i = 0; i < length; i++) {
                 sum += competenciesForTechnology.get(key).get(i);
             }

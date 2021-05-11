@@ -8,7 +8,6 @@ public class TopicDTO {
     private String techName;
 
     public TopicDTO() {
-        //super();
     }
 
     public TopicDTO(long topicId, String techName) {
