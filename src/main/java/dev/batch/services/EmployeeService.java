@@ -23,7 +23,7 @@ public class EmployeeService {
 	RestTemplate restTemplate;
 
 	// use service name in discovery service
-	private static final String EMPLOYEE_SERVICE_URL = "http://20.185.67.43/employees";
+	private static final String EMPLOYEE_SERVICE_URL = "http://20.185.67.43:8082/employees";
 //	private static final String EMPLOYEE_SERVICE_URL = "http://employee-service/employees";
 
 	public Employee getEmployeeById(long id){

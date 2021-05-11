@@ -24,7 +24,7 @@ public class CurriculumService {
 
 
 	// use service name in discovery service
-	private static final String CURRICULUM_SERVICE_URL = "http://40.122.154.60/curriculum";
+	private static final String CURRICULUM_SERVICE_URL = "http://40.122.154.60:8085/curriculum";
 //	private static final String CURRICULUM_SERVICE_URL = "http://curriculum-service/curriculum";
 
 
