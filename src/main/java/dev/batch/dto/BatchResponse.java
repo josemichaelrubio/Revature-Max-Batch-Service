@@ -12,13 +12,19 @@ public class BatchResponse {
     private Batch batch;
     private Map<Long, List<String>> quizAverage;
     private Map<Long, List<String>> competencyAverage;
+    private Map<Long, List<String>> qcRatingsAverage;
+    private Map<Long, List<String>> qcInstructorFeedbackAverage;
 
     public BatchResponse() {}
 
-    public BatchResponse(Batch batch, Map<Long, List<String>> quizAverage, Map<Long, List<String>> competencyAverage) {
+    public BatchResponse(Batch batch, Map<Long, List<String>> quizAverage, Map<Long,
+            List<String>> competencyAverage, Map<Long, List<String>> qcRatingsAverage,
+                         Map<Long, List<String>> qcInstructorFeedbackAverage) {
         this.batch = batch;
         this.quizAverage = quizAverage;
         this.competencyAverage = competencyAverage;
+        this.qcRatingsAverage = qcRatingsAverage;
+        this.qcInstructorFeedbackAverage = qcInstructorFeedbackAverage;
 
     }
 
@@ -46,17 +52,33 @@ public class BatchResponse {
         this.competencyAverage = competencyAverage;
     }
 
+    public Map<Long, List<String>> getQcRatingsAverage() {
+        return qcRatingsAverage;
+    }
+
+    public void setQcRatingsAverage(Map<Long, List<String>> qcRatingsAverage) {
+        this.qcRatingsAverage = qcRatingsAverage;
+    }
+
+    public Map<Long, List<String>> getQcInstructorFeedbackAverage() {
+        return qcInstructorFeedbackAverage;
+    }
+
+    public void setQcInstructorFeedbackAverage(Map<Long, List<String>> qcInstructorFeedbackAverage) {
+        this.qcInstructorFeedbackAverage = qcInstructorFeedbackAverage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BatchResponse that = (BatchResponse) o;
-        return Objects.equals(batch, that.batch) && Objects.equals(quizAverage, that.quizAverage) && Objects.equals(competencyAverage, that.competencyAverage);
+        return Objects.equals(batch, that.batch) && Objects.equals(quizAverage, that.quizAverage) && Objects.equals(competencyAverage, that.competencyAverage) && Objects.equals(qcRatingsAverage, that.qcRatingsAverage) && Objects.equals(qcInstructorFeedbackAverage, that.qcInstructorFeedbackAverage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(batch, quizAverage, competencyAverage);
+        return Objects.hash(batch, quizAverage, competencyAverage, qcRatingsAverage, qcInstructorFeedbackAverage);
     }
 
     @Override
@@ -65,131 +87,9 @@ public class BatchResponse {
                 "batch=" + batch +
                 ", quizAverage=" + quizAverage +
                 ", competencyAverage=" + competencyAverage +
+                ", qcRatingsAverage=" + qcRatingsAverage +
+                ", qcInstructorFeedbackAverage=" + qcInstructorFeedbackAverage +
                 '}';
     }
-
-    /* @Component
-    private static class QuizAverage implements Serializable {
-        private String quizName;
-        private String average;
-        private String count;
-
-        public QuizAverage() {}
-
-        public QuizAverage(String quizName, String average, String count) {
-            this.quizName = quizName;
-            this.average = average;
-            this.count = count;
-        }
-
-        public String getQuizName() {
-            return quizName;
-        }
-
-        public void setQuizName(String quizName) {
-            this.quizName = quizName;
-        }
-
-        public String getAverage() {
-            return average;
-        }
-
-        public void setAverage(String average) {
-            this.average = average;
-        }
-
-        public String getCount() {
-            return count;
-        }
-
-        public void setCount(String count) {
-            this.count = count;
-        }
-
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            QuizAverage that = (QuizAverage) o;
-            return Objects.equals(quizName, that.quizName) && Objects.equals(average, that.average) && Objects.equals(count, that.count);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(quizName, average, count);
-        }
-
-        @Override
-        public String toString() {
-            return "QuizAverage{" +
-                    "quizName='" + quizName + '\'' +
-                    ", average='" + average + '\'' +
-                    ", count='" + count + '\'' +
-                    '}';
-        }
-    }
-
-    @Component
-    private static class CompetencyAverage implements Serializable {
-
-        private String topicName;
-        private String average;
-        private String count;
-
-        public CompetencyAverage() {}
-
-        public CompetencyAverage(String topicName, String average, String count) {
-            this.topicName = topicName;
-            this.average = average;
-            this.count = count;
-        }
-
-        public String getTopicName() {
-            return topicName;
-        }
-
-        public void setTopicName(String topicName) {
-            this.topicName = topicName;
-        }
-
-        public String getAverage() {
-            return average;
-        }
-
-        public void setAverage(String average) {
-            this.average = average;
-        }
-
-        public String getCount() {
-            return count;
-        }
-
-        public void setCount(String count) {
-            this.count = count;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            CompetencyAverage that = (CompetencyAverage) o;
-            return Objects.equals(topicName, that.topicName) && Objects.equals(average, that.average) && Objects.equals(count, that.count);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(topicName, average, count);
-        }
-
-        @Override
-        public String toString() {
-            return "CompetencyAverage{" +
-                    "topicName='" + topicName + '\'' +
-                    ", average='" + average + '\'' +
-                    ", count='" + count + '\'' +
-                    '}';
-        }
-    } */
 
 }
