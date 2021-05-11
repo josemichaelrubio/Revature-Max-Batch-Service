@@ -48,7 +48,7 @@ pipeline {
 //                 print 'DB_URL.collect { it }=' + DB_URL.collect { it }
 //                 print 'DB_USER.collect { it }=' + DB_USER.collect { it }
 //                 print 'DB_PASS.collect { it }=' + DB_PASS.collect { it }
-                sh 'docker run -d --rm --network host -p ${PORT}:${PORT} -e DB_USER=${DB_USER} -e DB_PASS=${DB_PASS} -e DB_URL=${DB_URL} -e SPRING_PROFILES_ACTIVE=prod -e DOCKER_HOST=40.76.1.66 --name ${CONTAINER_NAME} ${IMAGE_TAG}'
+                sh 'docker run -d --rm --network host -p ${PORT}:${PORT} -e DB_USER=${DB_USER} -e DB_PASS=${DB_PASS} -e DB_URL=${DB_URL} -e SPRING_PROFILES_ACTIVE=prod --name ${CONTAINER_NAME} ${IMAGE_TAG}'
             }
         }
     }
