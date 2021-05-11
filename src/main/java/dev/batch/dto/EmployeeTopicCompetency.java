@@ -7,7 +7,14 @@ public class EmployeeTopicCompetency {
 	// unsure on the type
 	private float competency;
 
-	// favNotes would go here if we need it
+	public EmployeeTopicCompetency() {
+	}
+
+	public EmployeeTopicCompetency(EmployeeTopicCompetencyId id, float competency) {
+		this.id = id;
+		this.competency = competency;
+	}
+// favNotes would go here if we need it
 
 	public EmployeeTopicCompetencyId getId() {
 		return id;
