@@ -6,6 +6,15 @@ public class QuizDTO {
 	private Long quizId;
 	private String name;
 
+	public QuizDTO() {
+		//super();
+	}
+
+	public QuizDTO(Long quizId, String name) {
+		this.quizId = quizId;
+		this.name = name;
+	}
+
 	public Long getQuizId() {
 		return quizId;
 	}
