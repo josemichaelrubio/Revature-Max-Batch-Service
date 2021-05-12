@@ -1,6 +1,9 @@
 package dev.batch.controllers;
 import dev.batch.dto.Employee;
 import dev.batch.dto.EmployeeDTO;
+import dev.batch.models.Batch;
+import dev.batch.models.BatchAssociates;
+import dev.batch.services.BatchAssociatesService;
 import dev.batch.services.BatchService;
 import dev.batch.dto.BatchResponse;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +29,9 @@ public class BatchController {
     @Autowired
     BatchService batchService;
 
+    @Autowired
+    BatchAssociatesService batchAssociatesService;
+
 
     Logger logger = LogManager.getLogger(BatchController.class);
 
@@ -49,6 +55,12 @@ public class BatchController {
     {
         logger.info("trainer adding employees: "+employeeEmails+" to batch: "+batchId);
         return ResponseEntity.ok().body(batchService.addAssociate(batchId, employeeEmails));
+    }
+
+    @GetMapping("/{employee-id}/batch")
+    public ResponseEntity<Long> getBatchByEmployeeId(@PathVariable("employee-id") long employeeId)
+    {
+        return batchAssociatesService.getBatchIdByEmployeeId(employeeId);
     }
 
     @DeleteMapping("/{batch-id}/associates/{employee-id}")

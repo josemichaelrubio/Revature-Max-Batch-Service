@@ -6,6 +6,7 @@ import dev.batch.models.BatchAssociates;
 import dev.batch.repositories.BatchAssociatesRepository;
 import dev.batch.repositories.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -350,4 +351,5 @@ public class BatchService {
     public void deleteAssociate(long batchId, long empId){
         batchAssociatesRepository.deleteByEmployeeId(empId);
     }
+
 }
