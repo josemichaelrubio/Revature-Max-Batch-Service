@@ -344,5 +344,31 @@ public class BatchServiceTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void addAssociate() {
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(1L, "test1@web.com", "ASSOCIATE"));
+        employees.add(new Employee(2L, "test2@web.com", "GUEST"));
+        employees.add(new Employee(3L, "test3@web.com", "ASSOCIATE"));
+        employees.add(new Employee(5L, "test5@web.com", "GUEST"));
+
+        List<String> employeeEmails = new ArrayList<>();
+        employees.forEach(employee -> employeeEmails.add(employee.getEmail()));
+
+        Batch batch = new Batch(1L, "batchName", "batch description", 3L, "batch Location", 1L);
+        when(batchRepository.findById(1L)).thenReturn(Optional.of(batch));
+        when(employeeService.getEmployeesByListOfEmails(Arrays.asList("test1@web.com", "test2@web.com", "test3@web.com", "test5@web.com")))
+                .thenReturn(employees);
+
+        List<Employee> expectedReturn = Arrays.asList(employees.get(1), employees.get(3));
+        List<Employee> actual = batchService.addAssociate(1L, employees);
+
+        verify(batchAssociatesRepository).save(new BatchAssociates(new BatchAssociates.BatchAssociatesId(1L, batch)));
+        verify(batchAssociatesRepository).save(new BatchAssociates(new BatchAssociates.BatchAssociatesId(3L, batch)));
+        verify(employeeService).sendBatchEmails(employeeEmails, batch.getName(), batch.getDescription(), batch.getLocation(), batch.getTrainerId());
+
+        assertEquals(expectedReturn, actual);
+    }
+
 
 }
