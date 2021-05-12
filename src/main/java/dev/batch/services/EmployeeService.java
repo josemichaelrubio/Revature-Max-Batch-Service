@@ -82,7 +82,7 @@ public class EmployeeService {
 	}
 
 	public void sendBatchEmails(List<String> employeeEmails, String name, String description, String location, Long trainerId) {
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://employee-service/verify");
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://20.185.67.43:8082/verify");
 		StringBuilder stringOfEmails = new StringBuilder();
 		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
 		stringOfEmails.deleteCharAt(0);
