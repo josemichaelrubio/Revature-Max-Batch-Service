@@ -7,6 +7,13 @@ public class TopicDTO {
     private long topicId;
     private String techName;
 
+    public TopicDTO() {
+    }
+
+    public TopicDTO(long topicId, String techName) {
+        this.topicId = topicId;
+        this.techName = techName;
+    }
 
     public long getTopicId() {
         return topicId;

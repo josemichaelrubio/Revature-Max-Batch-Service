@@ -6,6 +6,7 @@ import dev.batch.models.BatchAssociates;
 import dev.batch.repositories.BatchAssociatesRepository;
 import dev.batch.repositories.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,7 +118,7 @@ public class BatchService {
 
         for (Long key : scoresForQuiz.keySet()) {
             int length = scoresForQuiz.get(key).size();
-            int sum = 0;
+            float sum = 0;
             for (int i = 0; i < length; i++) {
                 sum += scoresForQuiz.get(key).get(i);
             }
@@ -183,7 +184,7 @@ public class BatchService {
 
         for (Long key : competenciesForTechnology.keySet()) {
             int length = competenciesForTechnology.get(key).size();
-            int sum = 0;
+            float sum = 0;
             for (int i = 0; i < length; i++) {
                 sum += competenciesForTechnology.get(key).get(i);
             }
@@ -350,4 +351,5 @@ public class BatchService {
     public void deleteAssociate(long batchId, long empId){
         batchAssociatesRepository.deleteByEmployeeId(empId);
     }
+
 }
