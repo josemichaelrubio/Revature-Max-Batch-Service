@@ -50,7 +50,7 @@ public class BatchService {
         Map<Long, List<String>> techAverages = getTopicCompetencyAveragesInfo(employeeTopicCompetencies);
 
         // personal qc rating averages
-        Map<Long, List<String>> qcRatingAverages = getQCRatingsAverages(employeeQCFeedbacks);
+        Map<Long, List<String>> qcRatingAverages = new TreeMap<>();
 
         // instructor feedback averages
         Map<Long, List<String>> qcInstructorFeedbackAverages = getQCInstructorFeedbackAverages(employeeQCFeedbacks);
@@ -265,9 +265,9 @@ public class BatchService {
         for (Long key : ratingsForQC.keySet()) {
             int length = ratingsForQC.get(key).size();
             int sum = 0;
-            for (int i = 0; i < length; i++) {
+            /*for (int i = 0; i < length; i++) {
                 sum += ratingsForQC.get(key).get(i);
-            }
+            }*/
             float average = (float) sum/length;
             String formattedAverage = String.format("%.1f", average);
             String formatCount = Integer.toString(length);
