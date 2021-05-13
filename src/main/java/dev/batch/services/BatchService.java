@@ -43,6 +43,7 @@ public class BatchService {
         Batch batch = getBasicBatchInfo(id);
 
         //quizAverages for batch
+        System.out.println(empQuiz);
         Map<Long, List<String>> quizAverages = getQuizAveragesInfo(empQuiz);
 
 		//topic competency averages for batch
@@ -85,14 +86,19 @@ public class BatchService {
             }
 
         }
+        System.out.println(quizIds);
         // Send a list of these quiz ids to the Curriculum Service to get associated quiz name
        return curriculumService.getQuizzesByListOfIds(quizIds);
     }
 
     private Map<Long, List<String>> getQuizAveragesInfo(List<EmployeeQuizScore> empQuiz) {
-
+        if (empQuiz.size() == 0) {
+            return new TreeMap<>();
+        }
         // Retrive quiz names from curriculum service
         List<QuizDTO> quizDTOS = grabQuizNames(empQuiz);
+        System.out.println(quizDTOS);
+        System.out.println(quizDTOS.get(0).getId());
 
         // Calculate quiz averages and format quiz average output
         Map<Long, List<String>> averageScoreForQuizzes = new TreeMap<>();
@@ -104,8 +110,11 @@ public class BatchService {
                 scoresForQuiz.get(quizId).add(empQuiz.get(i).getScore());
                 averageScoreForQuizzes.put(quizId, new ArrayList<>());
                 for (int j = 0; j < quizDTOS.size(); j++) {
-                    if (quizId.equals(quizDTOS.get(j).getQuizId())) {
+                    System.out.println(quizId);
+                    System.out.println(quizDTOS.get(j).getId());
+                    if (quizId.equals(quizDTOS.get(j).getId())) {
                         String quizName = quizDTOS.get(j).getName();
+                        System.out.println(quizName);
                         averageScoreForQuizzes.get(quizId).add(quizName);
                         break;
                     }
@@ -159,6 +168,9 @@ public class BatchService {
 
     private Map<Long, List<String>> getTopicCompetencyAveragesInfo(List<EmployeeTopicCompetency> employeeTopicCompetencies) {
 
+        if (employeeTopicCompetencies.size() == 0) {
+            return new TreeMap<>();
+        }
        List<TopicDTO> topicDTOS = grabTopicsAndTechNames(employeeTopicCompetencies);
 
         Map<Long, List<String>> averageTopicCompetencies = new TreeMap<>();
@@ -224,6 +236,9 @@ public class BatchService {
     }
 
     public Map<Long, List<String>> getQCRatingsAverages(List<EmployeeQCFeedback> employeeQCFeedbacks) {
+        if (employeeQCFeedbacks.size() == 0) {
+            return new TreeMap<>();
+        }
         List<QCDTO> qcDTOs = grabQCNames(employeeQCFeedbacks);
 
         Map<Long, List<String>> averageQCRatings = new TreeMap<>();
@@ -265,6 +280,9 @@ public class BatchService {
     }
 
     public Map<Long, List<String>> getQCInstructorFeedbackAverages(List<EmployeeQCFeedback> employeeQCFeedbacks) {
+        if (employeeQCFeedbacks.size() == 0) {
+            return new TreeMap<>();
+        }
         List<QCDTO> qcDTOs = grabQCNames(employeeQCFeedbacks);
 
         Map<Long, List<String>> averageQCInstructorFeedbacks = new TreeMap<>();

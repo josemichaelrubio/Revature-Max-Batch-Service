@@ -38,14 +38,17 @@ public class CurriculumService {
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(requestUrl);
 		StringBuilder stringOfIds = new StringBuilder();
 		quizIds.forEach(id-> stringOfIds.append(",").append(id));
-		if(!quizIds.isEmpty())
-			stringOfIds.deleteCharAt(0);
+		if (quizIds.size() == 0) {
+			return new ArrayList<>();
+		}
+		stringOfIds.deleteCharAt(0);
 
 		uriComponentsBuilder.queryParam("ids", stringOfIds);
 		String uri = uriComponentsBuilder.toUriString();
 
 		ResponseEntity<QuizDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<QuizDTO[]>(new HttpHeaders()), QuizDTO[].class);
 		if (responseEntity.getBody() != null){
+			System.out.println(Arrays.asList(responseEntity.getBody()));
 			return Arrays.asList(responseEntity.getBody());
 		}
 		return new ArrayList<>();
