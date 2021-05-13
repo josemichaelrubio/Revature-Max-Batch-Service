@@ -3,15 +3,23 @@ package dev.batch.dto;
 import java.util.Objects;
 
 public class QuizDTO {
-	private Long quizId;
+	private Long id;
 	private String name;
 
-	public Long getQuizId() {
-		return quizId;
+	public QuizDTO() {
 	}
 
-	public void setQuizId(Long quizId) {
-		this.quizId = quizId;
+	public QuizDTO(Long quizId, String name) {
+		this.id = quizId;
+		this.name = name;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long quizId) {
+		this.id = quizId;
 	}
 
 	public String getName() {
@@ -27,18 +35,18 @@ public class QuizDTO {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		QuizDTO quizDTO = (QuizDTO) o;
-		return Objects.equals(quizId, quizDTO.quizId) && Objects.equals(name, quizDTO.name);
+		return Objects.equals(id, quizDTO.id) && Objects.equals(name, quizDTO.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(quizId, name);
+		return Objects.hash(id, name);
 	}
 
 	@Override
 	public String toString() {
 		return "QuizDTO{" +
-				"quizId=" + quizId +
+				"id=" + id +
 				", name='" + name + '\'' +
 				'}';
 	}

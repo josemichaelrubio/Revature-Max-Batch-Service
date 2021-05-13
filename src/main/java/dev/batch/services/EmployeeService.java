@@ -23,7 +23,8 @@ public class EmployeeService {
 	RestTemplate restTemplate;
 
 	// use service name in discovery service
-	private static final String EMPLOYEE_SERVICE_URL = "http://employee-service/employees";
+	private static final String EMPLOYEE_SERVICE_URL = "http://20.185.67.43:8082/employees";
+//	private static final String EMPLOYEE_SERVICE_URL = "http://employee-service/employees";
 
 	public Employee getEmployeeById(long id){
 		// url for /employees/{id}
@@ -41,18 +42,20 @@ public class EmployeeService {
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(EMPLOYEE_SERVICE_URL);
 		StringBuilder stringOfIds = new StringBuilder();
 		employeeIds.forEach(id-> stringOfIds.append(",").append(id));
-		stringOfIds.deleteCharAt(0); // probably a better way to do this
+		stringOfIds.deleteCharAt(0);
 
 		// Don't remember the name of the query param
 		uriComponentsBuilder.queryParam("id", stringOfIds);
 		String uri = uriComponentsBuilder.toUriString();
-		uri += "&field=";
-		if (includeQuizScores)
-			uri += "quiz-scores,";
-		if (includeTopicCompetencies)
-			uri += "topic-competencies,";
-		if (includeQCFeedback)
-			uri += "qc-feedbacks";
+		if (includeQCFeedback || includeQuizScores || includeTopicCompetencies) {
+			uri += "&field=";
+			if (includeQuizScores)
+				uri += "quiz-scores,";
+			if (includeTopicCompetencies)
+				uri += "topic-competencies,";
+			if (includeQCFeedback)
+				uri += "qc-feedbacks";
+		}
 
 
 		ResponseEntity<EmployeeDTO[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<EmployeeDTO[]>(new HttpHeaders()), EmployeeDTO[].class);
@@ -78,15 +81,18 @@ public class EmployeeService {
 		return new ArrayList<>();
 	}
 
-	public void sendBatchEmails(List<String> employeeEmails, long batchId) {
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://employee-service/verify");
+	public void sendBatchEmails(List<String> employeeEmails, String name, String description, String location, Long trainerId) {
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://20.185.67.43:8082/verify");
 		StringBuilder stringOfEmails = new StringBuilder();
 		employeeEmails.forEach(email -> stringOfEmails.append(",").append(email));
 		stringOfEmails.deleteCharAt(0);
 
-		uriComponentsBuilder.queryParam("email", stringOfEmails);
-		uriComponentsBuilder.queryParam("batchId", batchId);
+		uriComponentsBuilder.queryParam("emails", stringOfEmails);
+		uriComponentsBuilder.queryParam("name", name);
+		uriComponentsBuilder.queryParam("description", description);
+		uriComponentsBuilder.queryParam("location", location);
+		uriComponentsBuilder.queryParam("trainerId", trainerId);
 		String uri = uriComponentsBuilder.toUriString();
-		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<Employee[]>(new HttpHeaders()), Employee[].class);
+		restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String[]>(new HttpHeaders()), String[].class);
 	}
 }

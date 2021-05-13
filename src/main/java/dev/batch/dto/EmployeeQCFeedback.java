@@ -5,15 +5,13 @@ import java.util.Objects;
 public class EmployeeQCFeedback {
 
     private QCFeedbackId id;
-    private Employee employee;
     private Integer associateRating;
     private Integer instructorFeedback;
 
     public EmployeeQCFeedback() {}
 
-    public EmployeeQCFeedback(QCFeedbackId id, Employee employee, Integer associateRating, Integer instructorFeedback) {
+    public EmployeeQCFeedback(QCFeedbackId id, Integer associateRating, Integer instructorFeedback) {
         this.id = id;
-        this.employee = employee;
         this.associateRating = associateRating;
         this.instructorFeedback = instructorFeedback;
     }
@@ -24,14 +22,6 @@ public class EmployeeQCFeedback {
 
     public void setId(QCFeedbackId id) {
         this.id = id;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public Integer getAssociateRating() {
@@ -55,19 +45,18 @@ public class EmployeeQCFeedback {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EmployeeQCFeedback that = (EmployeeQCFeedback) o;
-        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(associateRating, that.associateRating) && Objects.equals(instructorFeedback, that.instructorFeedback);
+        return Objects.equals(id, that.id) && Objects.equals(associateRating, that.associateRating) && Objects.equals(instructorFeedback, that.instructorFeedback);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, employee, associateRating, instructorFeedback);
+        return Objects.hash(id, associateRating, instructorFeedback);
     }
 
     @Override
     public String toString() {
         return "QCFeedback{" +
                 "id=" + id +
-                ", employee=" + employee +
                 ", associateRating=" + associateRating +
                 ", instructorFeedback=" + instructorFeedback +
                 '}';

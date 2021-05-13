@@ -43,6 +43,15 @@ public class Batch {
         this.curriculumId = curriculumId;
     }
 
+    public Batch(Long id, String name, String description, Long trainerId, String location, Long curriculumId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.trainerId = trainerId;
+        this.location = location;
+        this.curriculumId = curriculumId;
+    }
+
     public Long getId() {
         return id;
     }
